@@ -1,4 +1,9 @@
-import React, { useState, useReducer, useCallback } from 'react'
+import React, { 
+  useMemo,
+  useState, 
+  useReducer, 
+  useCallback 
+} from 'react'
 import {
   GoogleMap,
   Marker, 
@@ -16,7 +21,7 @@ import { useMarkerHover, useClusterHover, usePolygonHover, reducer, initState } 
 const GoogleMapsBase = 'https://maps.googleapis.com/maps/api/js'
 const fullUrl = `${GoogleMapsBase}?key=${googleMapsApiKey}&libraries=geometry,drawing`
 
-const markers = Array(1000).fill(0).map((_, i) => {
+const markers = Array(10000).fill(0).map((_, i) => {
   const lat = Math.random() * 360 - 180
   const lng = Math.random() * 360 - 180
   return ({ key: i, center: { lat, lng } })
@@ -65,6 +70,16 @@ function App() {
     infoWindowProps,
   } = state
 
+  const memoizedMarkers = useMemo(() => {
+    return markers.map(props =>
+      <Marker onClick={onMarkerClick}
+        onMouseOver={onMarkerMouseOver} onMouseOut={onMarkerMouseOut}
+        {...props}>
+        <Circle radius={10000} />
+      </Marker>
+    )
+  }, [onMarkerClick, onMarkerMouseOver, onMarkerMouseOut])
+
   return (
     <GoogleMap url={fullUrl}
       zoom={zoom}
@@ -75,13 +90,7 @@ function App() {
         onClick={onClusterClick}
         onMouseOver={onClusterMouseOver}
         onMouseOut={onClusterMouseOut}>
-        {markers.map(props =>
-          <Marker onClick={onMarkerClick}
-            onMouseOver={onMarkerMouseOver} onMouseOut={onMarkerMouseOut}
-            {...props}>
-            <Circle radius={10000} />
-          </Marker>
-        )}
+        { memoizedMarkers }
       </Clusterer>
       <Polygon paths={triangleCoords}
         options={bermudaTriangleOpts}
