@@ -396,7 +396,7 @@ function useMapListener(mapObj, func, event) {
 
 This library was bootstrapped using [`create-react-library`](https://github.com/transitive-bullshit/create-react-library). For more information about local development, look to that library. Simply put, for local development do the following:
 1. `git clone https://github.com/tuccle22/google-maps-react-api.git`
-2. `cd react-google-maps`
+2. `cd google-maps-react-api`
 3. `yarn start` - this builds the library
 4. `cd example`
 5. create a `keys.js` file in the `src` directory which exports a named constant of `googleMapsApiKey`.
