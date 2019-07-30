@@ -1,13 +1,13 @@
 {
-  "name": "react-google-maps-api-example",
-  "homepage": "https://tuccle22.github.io/react-google-maps-api",
+  "name": "google-maps-react-api-example",
+  "homepage": "https://tuccle22.github.io/google-maps-react-api",
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "dependencies": {
     "@google/markerclustererplus": "^2.1.11",
     "prop-types": "^15.6.2",
-    "react-google-maps-api": "link:..",
+    "google-maps-react-api": "link:..",
     "react-scripts": "^3.0.1"
   },
   "scripts": {

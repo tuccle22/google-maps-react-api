@@ -3720,6 +3720,10 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
+"google-maps-react-api@link:..":
+  version "0.0.0"
+  uid ""
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.0.tgz#8d8fdc73977cb04104721cb53666c1ca64cd328b"
@@ -6837,10 +6841,6 @@ react-dev-utils@^9.0.1:
 react-error-overlay@^5.1.6:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.6.tgz#0cd73407c5d141f9638ae1e0c63e7b2bf7e9929d"
-
-"react-google-maps-api@link:..":
-  version "0.0.0"
-  uid ""
 
 react-is@^16.8.1, react-is@^16.8.4:
   version "16.8.6"

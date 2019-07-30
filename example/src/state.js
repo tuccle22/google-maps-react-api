@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { getLatLng, getPolygonCenter } from 'react-google-maps-api';
+import { getLatLng, getPolygonCenter } from 'google-maps-react-api';
 import { useHover } from './helper_hooks';
 
 const initState = {

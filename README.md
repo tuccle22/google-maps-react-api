@@ -1,14 +1,14 @@
-# react-google-maps-api
+# google-maps-react-api
 
 > A declarative react api for google maps
 
-[![NPM](https://img.shields.io/npm/v/react-google-maps-api.svg)](https://www.npmjs.com/package/react-google-maps-api) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/google-maps-react-api.svg)](https://www.npmjs.com/package/google-maps-react-api) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install (not published yet)
 
 ```bash
-npm install --save react-google-maps-api
-yarn add react-google-maps-api
+npm install --save google-maps-react-api
+yarn add google-maps-react-api
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ yarn add react-google-maps-api
 ##### https://developers.google.com/maps/documentation/javascript/reference/map
 
 ```jsx
-import { GoogleMap } from 'react-google-maps-api';
+import { GoogleMap } from 'google-maps-react-api';
 
 const url = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry,drawing`;
 const containerStyle = {style: {width: '100%', height: '100vh'}};
@@ -39,7 +39,7 @@ function SimpleMap() {
 | bounds              | LatLngBounds   |               | No         |
 | center              | latLng Obj     |               | Yes        |
 | containerProps      | Object         |               | Yes        |
-| children            | `react-google-maps-api` components |               | No         |
+| children            | `google-maps-react-api` components |               | No         |
 | options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | No         |
 | url                 | String         |               | Yes        |
 | zoom                | Number         |               | Yes        |
@@ -70,7 +70,7 @@ function SimpleMap() {
 <details><summary>Marker Example</summary>
 
 ```jsx
-import { GoogleMap, Marker } from 'react-google-maps-api';
+import { GoogleMap, Marker } from 'google-maps-react-api';
 
 function MapWithMarker() {
   return (
@@ -108,7 +108,7 @@ function MapWithMarker() {
 <details><summary>Polygon Example</summary>
 
 ```jsx
-import { GoogleMap, Polygon } from 'react-google-maps-api';
+import { GoogleMap, Polygon } from 'google-maps-react-api';
 
 const triangleCoords = [
   { lat: 25.774, lng: -80.190 },
@@ -158,7 +158,7 @@ function MapWithPolygon() {
 
 #### InfoWindow - center
 ```jsx
-import { GoogleMap, InfoWindow } from 'react-google-maps-api';
+import { GoogleMap, InfoWindow } from 'google-maps-react-api';
 
 function MapWithInfoWindow() {
   return (
@@ -174,7 +174,7 @@ function MapWithInfoWindow() {
 #### InfoWindow - `Marker` || `Polygon`
 The `InfoWindow` can be positioned according to either the `Marker` or `Polygon` component. Note: It may be more performant to use a single InfoWindow passing in a `center` or an `anchor` prop if you only need to show one InfoWindow at a time, such while hovering on a marker.
 ```jsx
-import { GoogleMap, InfoWindow, Marker } from 'react-google-maps-api';
+import { GoogleMap, InfoWindow, Marker } from 'google-maps-react-api';
 
 function MapWithMarkerAndInfoWindow() {
   return (
@@ -205,7 +205,7 @@ function MapWithMarkerAndInfoWindow() {
 <details><summary>Circle Example</summary>
 
 ```jsx
-import { GoogleMap, Circle } from 'react-google-maps-api';
+import { GoogleMap, Circle } from 'google-maps-react-api';
 
 function MapWithCircle() {
   return (
@@ -220,7 +220,7 @@ function MapWithCircle() {
 
 #### Circle - `Marker`
 ```jsx
-import { GoogleMap, Marker, Circle } from 'react-google-maps-api';
+import { GoogleMap, Marker, Circle } from 'google-maps-react-api';
 
 function MapWithMarkerAndCircle() {
   return (
@@ -248,7 +248,7 @@ function MapWithMarkerAndCircle() {
 <details><summary>DrawingManager Example</summary>
 
 ```jsx
-import { GoogleMap, DrawingManager } from 'react-google-maps-api';
+import { GoogleMap, DrawingManager } from 'google-maps-react-api';
 
 function MapWithDrawingManager() {
   return (
@@ -278,7 +278,7 @@ function MapWithDrawingManager() {
 <details><summary>OverlayView Example</summary>
 
 ```jsx
-import { GoogleMap, OverlayView } from 'react-google-maps-api';
+import { GoogleMap, OverlayView } from 'google-maps-react-api';
 
 function MapWithOverlayView() {
   return (
@@ -293,7 +293,7 @@ function MapWithOverlayView() {
 
 #### OverlayView - `Polygon`
 ```jsx
-import { GoogleMap, OverlayView } from 'react-google-maps-api';
+import { GoogleMap, OverlayView } from 'google-maps-react-api';
 
 function MapWithPolygonAndOverlayView() {
   return (
@@ -324,7 +324,7 @@ function MapWithPolygonAndOverlayView() {
 
 For performance reasons, when a `Circle` is a child of a `Marker` and that `Marker` is a child of a `Clusterer`, the `Circle` is removed from the map when its `Marker` is clustered.
 ```jsx
-import { GoogleMap, Marker, Clusterer } from 'react-google-maps-api';
+import { GoogleMap, Marker, Clusterer } from 'google-maps-react-api';
 
 const markers = Array(1000).fill(0).map((_, i) => {
   const lat = Math.random() * 360 - 180;
@@ -395,7 +395,7 @@ function useMapListener(mapObj, func, event) {
 ## Local Development
 
 This library was bootstrapped using [`create-react-library`](https://github.com/transitive-bullshit/create-react-library). For more information about local development, look to that library. Simply put, for local development do the following:
-1. `git clone https://github.com/tuccle22/react-google-maps-api.git`
+1. `git clone https://github.com/tuccle22/google-maps-react-api.git`
 2. `cd react-google-maps`
 3. `yarn start` - this builds the library
 4. `cd example`

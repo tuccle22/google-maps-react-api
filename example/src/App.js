@@ -9,7 +9,7 @@ import {
   Polygon,
   DrawingManager,
   getLatLng
-} from 'react-google-maps-api'
+} from 'google-maps-react-api'
 import { googleMapsApiKey } from './keys'
 import { useInterval } from './helpers/utils'
 import { useMarkerHover, useClusterHover, usePolygonHover, reducer, initState } from './state'
