@@ -4,27 +4,393 @@
 
 [![NPM](https://img.shields.io/npm/v/react-google-maps-api.svg)](https://www.npmjs.com/package/react-google-maps-api) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-## Install
+## Install (not published yet)
 
 ```bash
 npm install --save react-google-maps-api
+yarn add react-google-maps-api
 ```
 
 ## Usage
 
+### GoogleMap
+##### https://developers.google.com/maps/documentation/javascript/reference/map
+
 ```jsx
-import React, { Component } from 'react'
+import { GoogleMap } from 'react-google-maps-api';
 
-import MyComponent from 'react-google-maps-api'
+const url = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry,drawing`;
+const containerStyle = {style: {width: '100%', height: '100vh'}};
 
-class Example extends Component {
-  render () {
-    return (
-      <MyComponent />
-    )
-  }
+function SimpleMap() {
+  return (
+    <GoogleMap url={url}
+      zoom={3}
+      center={{lat: 45, lng: -45}}
+      containerProps={containerStyle}
+    />
+  );
 }
 ```
+<details><summary>GoogleMap Props</summary>
+
+| Name                | Type           | Default Value | Required   |
+| ------------------- | -------------- | ------------- | ---------- |
+| bounds              | LatLngBounds   |               | No         |
+| center              | latLng Obj     |               | Yes        |
+| containerProps      | Object         |               | Yes        |
+| children            | `react-google-maps-api` components |               | No         |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | No         |
+| url                 | String         |               | Yes        |
+| zoom                | Number         |               | Yes        |
+| EVENTS              |                |               |            |
+| onBoundsChanged     | Function       |               | No         |
+| onCenterChanged     | Function       |               | No         |
+| onClick             | Function       |               | No         |
+| onDblClick          | Function       |               | No         |
+| onDrag              | Function       |               | No         |
+| onDragEnd           | Function       |               | No         |
+| onDragStart         | Function       |               | No         |
+| onHeadingChanged    | Function       |               | No         |
+| onIdle              | Function       |               | No         |
+| onMapTypeIdChanged  | Function       |               | No         |
+| onMouseMove         | Function       |               | No         |
+| onMouseOut          | Function       |               | No         |
+| onMouseOver         | Function       |               | No         |
+| onProjectionChanged | Function       |               | No         |
+| onRightClick        | Function       |               | No         |
+| onTilesLoaded       | Function       |               | No         |
+| onTiltChanged       | Function       |               | No         |
+| onZoomChanged       | Function       |               | No         |
+</details>
+
+### Marker
+##### https://developers.google.com/maps/documentation/javascript/reference/marker
+
+<details><summary>Marker Example</summary>
+
+```jsx
+import { GoogleMap, Marker } from 'react-google-maps-api';
+
+function MapWithMarker() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Marker center={{lat: 45, lng: -45}} />
+    </GoogleMap>
+  );
+}
+```
+</details>
+<details><summary>Marker Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| center              | latLng Obj     |               | Yes       |
+| children            | `Circle` `InfoWindow` |               | No        |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions)         |               | Yes       |     
+| noRedraw            | Number         |               | No        |
+| EVENTS              |                |               |           |
+| onClick             | Function       |               | No        |
+| onDblClick          | Function       |               | No        |
+| onDrag              | Function       |               | No        |
+| onDragEnd           | Function       |               | No        |
+| onDragStart         | Function       |               | No        |
+| onMouseDown         | Function       |               | No        |
+| onMouseOut          | Function       |               | No        |
+| onMouseOver         | Function       |               | No        |
+| onMouseUp           | Function       |               | No        |
+
+</details>
+
+
+### Polygon
+##### https://developers.google.com/maps/documentation/javascript/reference/polygon#Polygon
+<details><summary>Polygon Example</summary>
+
+```jsx
+import { GoogleMap, Polygon } from 'react-google-maps-api';
+
+const triangleCoords = [
+  { lat: 25.774, lng: -80.190 },
+  { lat: 18.466, lng: -66.118 },
+  { lat: 32.321, lng: -64.757 }
+];
+
+const bermudaTriangleOpts = {
+  paths: triangleCoords,
+  strokeColor: '#FF0000',
+  strokeOpacity: 0.8,
+  strokeWeight: 3,
+  fillColor: '#FF0000',
+  fillOpacity: 0.35
+};
+
+function MapWithPolygon() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Polygon options={bermudaTriangleOpts} />
+    </GoogleMap>
+  );
+}
+```
+</details>
+<details><summary>Polygon Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| children            | `InfoWindow`   |               | No        |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#PolygonOptions)         |               | Yes       |     
+| EVENTS              |                |               |           |
+| onClick             | Function       |               | No        |
+| onDblClick          | Function       |               | No        |
+| onDrag              | Function       |               | No        |
+| onDragEnd           | Function       |               | No        |
+| onDragStart         | Function       |               | No        |
+| onMouseDown         | Function       |               | No        |
+| onMouseOut          | Function       |               | No        |
+| onMouseOver         | Function       |               | No        |
+| onMouseUp           | Function       |               | No        |
+</details>
+
+### InfoWindow
+##### https://developers.google.com/maps/documentation/javascript/reference/info-window
+<details><summary>InfoWindow Example</summary>
+
+#### InfoWindow - center
+```jsx
+import { GoogleMap, InfoWindow } from 'react-google-maps-api';
+
+function MapWithInfoWindow() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <InfoWindow center={{lat: 45 lng: -45}}>
+        Hello World!
+      </InfoWindow>
+    </GoogleMap>
+  );
+}
+```
+
+#### InfoWindow - `Marker` || `Polygon`
+The `InfoWindow` can be positioned according to either the `Marker` or `Polygon` component. Note: It may be more performant to use a single InfoWindow passing in a `center` or an `anchor` prop if you only need to show one InfoWindow at a time, such while hovering on a marker.
+```jsx
+import { GoogleMap, InfoWindow, Marker } from 'react-google-maps-api';
+
+function MapWithMarkerAndInfoWindow() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Marker {...markerProps}>
+        <InfoWindow>
+          Hello World!
+        </InfoWindow>
+      </Marker>
+    </GoogleMap>
+  );
+}
+```
+</details>
+<details><summary>InfoWindow Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| anchor              | `Marker` instance |            | No        |
+| center              | latLng Obj     |               | `!anchor` |
+| children            | Node           |               | Yes       |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions)         |               | Yes       |     
+| EVENTS              |                |               |           |
+</details>
+
+### Circle
+##### https://developers.google.com/maps/documentation/javascript/reference/polygon#Circle
+<details><summary>Circle Example</summary>
+
+```jsx
+import { GoogleMap, Circle } from 'react-google-maps-api';
+
+function MapWithCircle() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Circle radius={500} 
+        center={{lat: 45, lng: -45}}
+      />
+    </GoogleMap>
+  );
+}
+```
+
+#### Circle - `Marker`
+```jsx
+import { GoogleMap, Marker, Circle } from 'react-google-maps-api';
+
+function MapWithMarkerAndCircle() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Marker {...markerProps}>
+        <Circle radius={500} />
+      </Marker>
+    </GoogleMap>
+  );
+}
+```
+</details>
+<details><summary>Circle Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| center              | latLng Obj     |               | Yes       |
+| radius              | Number         |               | Yes       |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#CircleOptions)         |               | No        |     
+| EVENTS              |                |               |           |
+</details>
+
+### DrawingManager
+##### https://developers.google.com/maps/documentation/javascript/reference/drawing#DrawingManager
+<details><summary>DrawingManager Example</summary>
+
+```jsx
+import { GoogleMap, DrawingManager } from 'react-google-maps-api';
+
+function MapWithDrawingManager() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <DrawingManager />
+    </GoogleMap>
+  );
+}
+```
+</details>
+<details><summary>DrawingManager Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/drawing#DrawingManagerOptions)         |               | No        |     
+| EVENTS              |                |               |           |
+| onCircleComplete    | Function       |               |           |
+| onMarkerComplete    | Function       |               |           |
+| onOverlayComplete   | Function       |               |           |
+| onPolyLineComplete  | Function       |               |           |
+| onPolyLineComplete  | Function       |               |           |
+| onRectangleComplete | Function       |               |           |
+</details>
+
+### OverlayView
+##### https://developers.google.com/maps/documentation/javascript/reference/overlay-view#OverlayView
+<details><summary>OverlayView Example</summary>
+
+```jsx
+import { GoogleMap, OverlayView } from 'react-google-maps-api';
+
+function MapWithOverlayView() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <OverlayView center={{lat: 45, lng: -45}}>
+        Hello World!
+      </OverlayView>
+    </GoogleMap>
+  );
+}
+```
+
+#### OverlayView - `Polygon`
+```jsx
+import { GoogleMap, OverlayView } from 'react-google-maps-api';
+
+function MapWithPolygonAndOverlayView() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Polygon {...polygonProps}>
+        <OverlayView>
+          Hello World!
+        </OverlayView>
+      </Polygon>
+    </GoogleMap>
+  );
+}
+```
+</details>
+<details><summary>OverlayView Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| center              | latLng Obj     |               | `!Polygon` child |
+| children            | Node (single)  |               | Yes       |
+| className           | String         |               | No        |
+| style               | Object         |               |           |
+</details>
+
+### Clusterer
+##### https://github.com/googlemaps/v3-utility-library/tree/master/markerclustererplus
+<details><summary>Clusterer Example</summary>
+
+For performance reasons, when a `Circle` is a child of a `Marker` and that `Marker` is a child of a `Clusterer`, the `Circle` is removed from the map when its `Marker` is clustered.
+```jsx
+import { GoogleMap, Marker, Clusterer } from 'react-google-maps-api';
+
+const markers = Array(1000).fill(0).map((_, i) => {
+  const lat = Math.random() * 360 - 180;
+  const lng = Math.random() * 360 - 180;
+  return ({ key: i, center: { lat, lng } });
+});
+
+function MapWithClusteringMarkers() {
+  return (
+    <GoogleMap {...googleMapProps}>
+      <Clusterer>
+        { markers.map(m =>
+          <Marker {...m} />
+        )}
+      </Clusterer>
+    </GoogleMap>
+  )
+}
+```
+</details>
+<details><summary>Clusterer Props</summary>
+
+| Name                | Type           | Default Value | Required  |
+| ------------------- | ---------------|---------------| --------- |
+| children            | `Marker[]`     |               | Yes       |
+| averageCenter       | String         | `false`       | No        |
+| batchSize           | Number         |               | No        |
+| batchSizeIE         | Number         |               | No        |
+| calculator          | Function       |               | No        |
+| clusterClass        | String         |               | No        |
+| enableRetinaIcons   | Boolean        | `false`       | No        |
+| gridSize            | Number         | `60`          | No        |
+| ignoreHidden        | Boolean        | `false`       | No        |
+| imageExtension      | String         |               | No        |
+| imagePath           | String         |               | No        |
+| imageSizes          | Array          |               | No        |
+| maxZoom             | Number         |               | No        |
+| minimumClusterSize  | Number         | `2`           | No        |
+| styles              | Array          |               | No        |
+| title               | String         |               | No        |
+| zoomOnClick         | Boolean        |               | No        |
+</details>
+
+### Notes about the api
+<details><summary>Expand</summary>
+
+#### center - `{ lat: number, lng: number }`
+All components that are positioned on the map accept this prop.
+
+#### options - `{ ...object }`
+Although the `google.maps` v3 api allows setting individual properties on its objects, it also allows these same (as far as I've seen) properties to be set with the `setOptions` function. This library simplifies those options by only allowing the latter.
+
+#### events
+Along with any `event` passed back from the google maps v3 api, a reference to the underlying `google.maps` object is returned. This is the hook that handles the events:
+```js
+function useMapListener(mapObj, func, event) {
+  useEffect(() => {
+    if (mapObj && func) {
+      const enhancedFunc = (...e) => func(...e, mapObj)
+      const listener = mapObj.addListener(event, enhancedFunc)
+      return () => window.google.maps.event.removeListener(listener)
+    }
+  }, [mapObj, func, event])
+}
+```
+</details>
 
 ## License
 
