@@ -6,11 +6,10 @@ import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
  * WORKING
  */
 function GoogleMap({
-  options,
-  children,
   bounds,
   center,
-  zoom,
+  children,
+  options,
   // event props
   onBoundsChanged,
   onCenterChanged,
@@ -45,9 +44,6 @@ function GoogleMap({
   // CENTER - sets center to new center
   useEffect(() => void map.panTo(center), [map, center])
   
-  // ZOOM - sets zoom  to new zoom
-  useEffect(() => void map.setZoom(zoom), [map, zoom])
-
   // EVENTS - add event listeners
   useMapListener(map, onBoundsChanged, 'bounds_changed')
   useMapListener(map, onCenterChanged, 'center_changed')

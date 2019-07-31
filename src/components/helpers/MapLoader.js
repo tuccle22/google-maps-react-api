@@ -7,10 +7,12 @@ import { MapProvider } from '../../contexts/map/map_context'
  * This component handles rendering the GoogleMap,
  * which is basically a set of listeners
  */
+const defaultOptions = {};
+
 function MapLoader({
-  containerProps,
-  zoom,
   center,
+  containerProps,
+  options = defaultOptions,
   ...rest
 }) {
   const [map, setMap] = useState(null)
@@ -21,25 +23,33 @@ function MapLoader({
    */
   const mapRef = useCallback(node => {
     if (node !== null) {
-      setMap(new window.google.maps.Map(node, {zoom, center}))
+      setMap(new window.google.maps.Map(node, {
+        zoom: options.zoom,
+        center
+      }))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // use the 'idle' event to determine that the map is fully loaded
-  useMapListener(map, useCallback(() =>  {
-    if (!isLoaded) setLoaded(true)
-  }, [isLoaded]), 
-    'idle', 
+  useMapListener(map, 
+    useCallback(() =>  {
+      if (!isLoaded) setLoaded(true)
+    }, [isLoaded]), 
+    'idle'
   )
 
   return (
     <div ref={mapRef} {...containerProps}>
-      { isLoaded && 
+      { isLoaded ? 
         <MapProvider value={map}>
-          <GoogleMap map={map} center={center} zoom={zoom} {...rest}
+          <GoogleMap map={map} 
+            center={center} 
+            options={options} 
+            {...rest}
           />
         </MapProvider>
+      : null
       }
     </div>
   )

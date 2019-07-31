@@ -3,7 +3,7 @@ import { getLatLng, getPolygonCenter } from 'google-maps-react-api';
 import { useHover } from './helper_hooks';
 
 const initState = {
-  zoom: 3,
+  options: { zoom: 3 },
   center: { lat: 45, lng: -45 }
 }
 

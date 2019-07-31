@@ -21,12 +21,14 @@ import { GoogleMap } from 'google-maps-react-api';
 
 const url = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry,drawing`;
 const containerStyle = {style: {width: '100%', height: '100vh'}};
+const center = {lat: 45, lng: -45};
+const options = {zoom: 3};
 
 function SimpleMap() {
   return (
     <GoogleMap url={url}
-      zoom={3}
-      center={{lat: 45, lng: -45}}
+      center={center}
+      options={options}
       containerProps={containerStyle}
     />
   );
@@ -36,11 +38,10 @@ function SimpleMap() {
 
 | Name                | Type           | Default Value | Required   |
 | ------------------- | -------------- | ------------- | ---------- |
-| bounds              | LatLngBounds   |               | No         |
 | center              | latLng Obj     |               | Yes        |
 | containerProps      | Object         |               | Yes        |
 | children            | `google-maps-react-api` components |               | No         |
-| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | No         |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | zoom property         |
 | url                 | String         |               | Yes        |
 | zoom                | Number         |               | Yes        |
 | EVENTS              |                |               |            |

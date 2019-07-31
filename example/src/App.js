@@ -65,8 +65,8 @@ function App() {
 
   const {
     center,
-    zoom,
     bounds,
+    options,
     infoWindowProps,
   } = state
 
@@ -82,10 +82,10 @@ function App() {
 
   return (
     <GoogleMap url={fullUrl}
-      zoom={zoom}
       bounds={bounds}
+      center={center}
       containerProps={{ style: { width: '100%', height: '100vh' } }}
-      center={center}>
+      options={options}>
       <Clusterer gridSize={100}
         onClick={onClusterClick}
         onMouseOver={onClusterMouseOver}
