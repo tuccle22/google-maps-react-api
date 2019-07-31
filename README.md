@@ -43,7 +43,6 @@ function SimpleMap() {
 | children            | `google-maps-react-api` components |               | No         |
 | options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | zoom property         |
 | url                 | String         |               | Yes        |
-| zoom                | Number         |               | Yes        |
 | EVENTS              |                |               |            |
 | onBoundsChanged     | Function       |               | No         |
 | onCenterChanged     | Function       |               | No         |
