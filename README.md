@@ -21,12 +21,14 @@ import { GoogleMap } from 'google-maps-react-api';
 
 const url = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry,drawing`;
 const containerStyle = {style: {width: '100%', height: '100vh'}};
+const center = {lat: 45, lng: -45};
+const options = {zoom: 3};
 
 function SimpleMap() {
   return (
     <GoogleMap url={url}
-      zoom={3}
-      center={{lat: 45, lng: -45}}
+      center={center}
+      options={options}
       containerProps={containerStyle}
     />
   );
@@ -36,13 +38,11 @@ function SimpleMap() {
 
 | Name                | Type           | Default Value | Required   |
 | ------------------- | -------------- | ------------- | ---------- |
-| bounds              | LatLngBounds   |               | No         |
 | center              | latLng Obj     |               | Yes        |
 | containerProps      | Object         |               | Yes        |
 | children            | `google-maps-react-api` components |               | No         |
-| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | No         |
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | zoom property         |
 | url                 | String         |               | Yes        |
-| zoom                | Number         |               | Yes        |
 | EVENTS              |                |               |            |
 | onBoundsChanged     | Function       |               | No         |
 | onCenterChanged     | Function       |               | No         |
@@ -207,11 +207,13 @@ function MapWithMarkerAndInfoWindow() {
 ```jsx
 import { GoogleMap, Circle } from 'google-maps-react-api';
 
+const options = { radius: 500 };
+const center = { lat: 45, lng: -45 };
 function MapWithCircle() {
   return (
     <GoogleMap {...googleMapProps}>
-      <Circle radius={500} 
-        center={{lat: 45, lng: -45}}
+      <Circle center={center}
+        options={options}
       />
     </GoogleMap>
   );
@@ -222,11 +224,12 @@ function MapWithCircle() {
 ```jsx
 import { GoogleMap, Marker, Circle } from 'google-maps-react-api';
 
+const options = { radius: 500 };
 function MapWithMarkerAndCircle() {
   return (
     <GoogleMap {...googleMapProps}>
       <Marker {...markerProps}>
-        <Circle radius={500} />
+        <Circle options={options} />
       </Marker>
     </GoogleMap>
   );
@@ -238,9 +241,22 @@ function MapWithMarkerAndCircle() {
 | Name                | Type           | Default Value | Required  |
 | ------------------- | ---------------|---------------| --------- |
 | center              | latLng Obj     |               | Yes       |
-| radius              | Number         |               | Yes       |
-| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#CircleOptions)         |               | No        |     
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#CircleOptions)         |               | radius property        |     
 | EVENTS              |                |               |           |
+| onCenterChanged     | Function       |               | No        |
+| onClick             | Function       |               | No        |
+| onDblClick          | Function       |               | No        |
+| onDrag              | Function       |               | No        |
+| onDragEnd           | Function       |               | No        |
+| onDragStart         | Function       |               | No        |
+| onMouseDown         | Function       |               | No        |
+| onMouseMove         | Function       |               | No        |
+| onMouseOut          | Function       |               | No        |
+| onMouseOver         | Function       |               | No        |
+| onMouseUp           | Function       |               | No        |
+| onRadiusChanged     | Function       |               | No        |
+| onRightClick        | Function       |               | No        |
+
 </details>
 
 ### DrawingManager

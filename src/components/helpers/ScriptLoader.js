@@ -8,7 +8,6 @@ import MapLoader from './MapLoader'
  */
 function ScriptLoader({
   url,
-  loadingElement,
   ...rest
 }) {
   const isScriptLoaded = useScript(url, window.google && window.google.maps)

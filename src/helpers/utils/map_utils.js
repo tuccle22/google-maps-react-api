@@ -6,7 +6,7 @@ function getLatLng(latLngObj) {
   return { lat, lng }
 }
 
-function getMarkerBounds(marker, radius = 150) {
+function getMarkerBounds(marker, radius) {
   const center = getLatLng(marker.getPosition())
   const bounds = new window.google.maps.Circle({
     center,
