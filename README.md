@@ -208,11 +208,13 @@ function MapWithMarkerAndInfoWindow() {
 ```jsx
 import { GoogleMap, Circle } from 'google-maps-react-api';
 
+const options = { radius: 500 };
+const center = { lat: 45, lng: -45 };
 function MapWithCircle() {
   return (
     <GoogleMap {...googleMapProps}>
-      <Circle radius={500} 
-        center={{lat: 45, lng: -45}}
+      <Circle center={center}
+        options={options}
       />
     </GoogleMap>
   );
@@ -223,11 +225,12 @@ function MapWithCircle() {
 ```jsx
 import { GoogleMap, Marker, Circle } from 'google-maps-react-api';
 
+const options = { radius: 500 };
 function MapWithMarkerAndCircle() {
   return (
     <GoogleMap {...googleMapProps}>
       <Marker {...markerProps}>
-        <Circle radius={500} />
+        <Circle options={options} />
       </Marker>
     </GoogleMap>
   );
@@ -239,8 +242,7 @@ function MapWithMarkerAndCircle() {
 | Name                | Type           | Default Value | Required  |
 | ------------------- | ---------------|---------------| --------- |
 | center              | latLng Obj     |               | Yes       |
-| radius              | Number         |               | Yes       |
-| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#CircleOptions)         |               | No        |     
+| options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#CircleOptions)         |               | radius property        |     
 | EVENTS              |                |               |           |
 </details>
 

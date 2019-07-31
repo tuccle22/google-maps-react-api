@@ -10,7 +10,6 @@ import { useMarker } from '../../contexts/marker/marker_context'
  */
 function Circle({
   center,
-  radius,
   options,
 }) {
   const map = useMap()
@@ -23,11 +22,6 @@ function Circle({
 
   // set circle options
   useSetOptions(circle, options)
-
-  // set radius
-  useEffect(() => {
-    circle.setRadius(radius)
-  }, [circle, radius])
 
   // set location, if marker context, anchor, else use center
   useEffect(() => {
