@@ -243,6 +243,20 @@ function MapWithMarkerAndCircle() {
 | center              | latLng Obj     |               | Yes       |
 | options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#CircleOptions)         |               | radius property        |     
 | EVENTS              |                |               |           |
+| onCenterChanged     | Function       |               | No        |
+| onClick             | Function       |               | No        |
+| onDblClick          | Function       |               | No        |
+| onDrag              | Function       |               | No        |
+| onDragEnd           | Function       |               | No        |
+| onDragStart         | Function       |               | No        |
+| onMouseDown         | Function       |               | No        |
+| onMouseMove         | Function       |               | No        |
+| onMouseOut          | Function       |               | No        |
+| onMouseOver         | Function       |               | No        |
+| onMouseUp           | Function       |               | No        |
+| onRadiusChanged     | Function       |               | No        |
+| onRightClick        | Function       |               | No        |
+
 </details>
 
 ### DrawingManager

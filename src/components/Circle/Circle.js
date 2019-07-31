@@ -1,16 +1,29 @@
 import { useEffect } from 'react'
 import { useMap } from '../../contexts/map/map_context'
-import { useSetOptions } from '../../helpers/hooks/map_hooks'
+import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useMarker } from '../../contexts/marker/marker_context'
 
 /**
- * CURRENTLY WORKING
- * TODO: EVENTS
+ * Full Coverage
  */
 function Circle({
   center,
   options,
+  // events
+  onCenterChanged,
+  onClick,
+  onDblClick,
+  onDrag,
+  onDragEnd,
+  onDragStart,
+  onMouseDown,
+  onMouseMove,
+  onMouseOut,
+  onMouseOver,
+  onMouseUp,
+  onRadiusChanged,
+  onRightClick
 }) {
   const map = useMap()
   const marker = useMarker()
@@ -22,6 +35,21 @@ function Circle({
 
   // set circle options
   useSetOptions(circle, options)
+
+  // set event listeners
+  useMapListener(circle, onCenterChanged, 'center_changed')
+  useMapListener(circle, onClick, 'click')
+  useMapListener(circle, onDblClick, 'dblclick')
+  useMapListener(circle, onDrag, 'drag')
+  useMapListener(circle, onDragEnd, 'dragend')
+  useMapListener(circle, onDragStart, 'dragstart')
+  useMapListener(circle, onMouseDown, 'mousedown')
+  useMapListener(circle, onMouseMove, 'mousemove')
+  useMapListener(circle, onMouseOut, 'mouseout')
+  useMapListener(circle, onMouseOver, 'mouseover')
+  useMapListener(circle, onMouseUp, 'mouseup')
+  useMapListener(circle, onRadiusChanged, 'radius_changed')
+  useMapListener(circle, onRightClick, 'rightclick')
 
   // set location, if marker context, anchor, else use center
   useEffect(() => {
