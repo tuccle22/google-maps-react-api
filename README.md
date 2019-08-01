@@ -11,7 +11,79 @@ npm install --save google-maps-react-api
 yarn add google-maps-react-api
 ```
 
+<details><summary>Motivations behind this api</summary>
+
+There are inherent pitfalls when mixing a declarative api like this one, with the underlying imperative objects that make this api possible. This api aims to solve a problem (perhaps a very edge case) where `prop` "changes" don't produce the intended `effect`. Imagine the following scenario:
+
+1. You create a `SimpleMap` component with a few buttons that also has a `GoogleMap` component with a `zoom` prop that takes a `number` and looks like the following:
+```jsx
+// this is not the real api
+function SimpleMap() {
+  const [zoom, setZoom] = useState(3);
+  const map = getMapRef;
+  return (
+    <React.Fragment>
+      <GoogleMap mapRef={getMapRef} zoom={zoom} {...otherProps} />
+      <button onClick={() => setZoom(5)}>Declarative Zoom</button>
+      <button onClick={() => map.setZoom(10)}>Imperative Zoom</button>
+    </Reac.Fragment>
+  );
+}
+```
+2. The map is initially set to a `zoom` level of `3`. Click the 'Declarative Zoom' button and the map zooms in to level `5`.
+3. Now click the 'Imperative Zoom' button and the map zooms in to level `10`.
+4. Now click the 'Declarative Zoom' button again. The expectation is that the map would zoom back to level `5`, but how could the `GoogleMap` component handle this change? From the `GoogleMap` component's perspective, it has received the same `zoom` prop value twice, as it has no awareness of the imperative `map.setZoom(10)` call in between the two declarative calls... 
+```js
+Object.is(5, 5) === true // Object.is is what react uses to run effects
+```
+#### Solution
+The answer to this problem is to pass an `object` as props, because:
+```js
+Object.is({}, {}) === false
+```
+With this in mind, consider if the `SimpleMap` component used a `GoogleMap` component that accepts an `options` prop of an `object` like this:
+```jsx
+// mapRef is not a real prop on the GoogleMap component in this library
+function SimpleMap() {
+  const [options, setOptions] = useState({zoom: 3});
+  const map = getMapRef;
+  return (
+    <React.Fragment>
+      <GoogleMap mapRef={getMapRef} options={options} {...otherProps} />
+      <button onClick={() => setOptions({zoom: 5})}>Declarative Zoom</button>
+      <button onClick={() => map.setZoom(10)}>Imperative Zoom</button>
+    </React.Fragment>
+  );
+}
+```
+This will handle the previously outlined steps, and our expectations, correctly. Fortunately, the google maps v3 api handles both `map.setZoom` as well as `map.setOptions` functions.
+
+</details>
+
 ## Usage
+
+<details><summary>API in General</summary>
+
+#### center - `{ lat: number, lng: number }`
+All components that are positioned on the map accepts this prop.
+
+#### options - `{ ...object }`
+All components that implement setOptions accepts this prop.
+
+#### events
+Along with any `event` passed back from the google maps v3 api, a reference to the underlying `google.maps` object is returned. This is the hook that handles the events:
+```js
+function useMapListener(mapObj, func, event) {
+  useEffect(() => {
+    if (mapObj && func) {
+      const enhancedFunc = (...e) => func(...e, mapObj)
+      const listener = mapObj.addListener(event, enhancedFunc)
+      return () => window.google.maps.event.removeListener(listener)
+    }
+  }, [mapObj, func, event])
+}
+```
+</details>
 
 ### GoogleMap
 ##### https://developers.google.com/maps/documentation/javascript/reference/map
@@ -382,30 +454,6 @@ function MapWithClusteringMarkers() {
 | styles              | Array          |               | No        |
 | title               | String         |               | No        |
 | zoomOnClick         | Boolean        |               | No        |
-</details>
-
-### Notes about the api
-<details><summary>Expand</summary>
-
-#### center - `{ lat: number, lng: number }`
-All components that are positioned on the map accept this prop.
-
-#### options - `{ ...object }`
-Although the `google.maps` v3 api allows setting individual properties on its objects, it also allows these same (as far as I've seen) properties to be set with the `setOptions` function. This library simplifies those options by only allowing the latter.
-
-#### events
-Along with any `event` passed back from the google maps v3 api, a reference to the underlying `google.maps` object is returned. This is the hook that handles the events:
-```js
-function useMapListener(mapObj, func, event) {
-  useEffect(() => {
-    if (mapObj && func) {
-      const enhancedFunc = (...e) => func(...e, mapObj)
-      const listener = mapObj.addListener(event, enhancedFunc)
-      return () => window.google.maps.event.removeListener(listener)
-    }
-  }, [mapObj, func, event])
-}
-```
 </details>
 
 ## Local Development
