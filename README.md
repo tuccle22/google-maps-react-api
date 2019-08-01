@@ -114,6 +114,7 @@ function SimpleMap() {
 | containerProps      | Object         |               | Yes        |
 | children            | `google-maps-react-api` components |               | No         |
 | options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)         |               | zoom property         |
+| loadingElement      | Node           |  `null`       | No         |
 | url                 | String         |               | Yes        |
 | EVENTS              |                |               |            |
 | onBoundsChanged     | Function       |               | No         |

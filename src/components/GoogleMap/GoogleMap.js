@@ -1,11 +1,11 @@
-import { useEffect } from 'react'
-import { useMap } from '../../contexts/map/map_context'
+import React, { useEffect } from 'react'
+import { MapProvider } from '../../contexts/map/map_context'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
-
 /**
- * WORKING
+ * Full Coverage
  */
 function GoogleMap({
+  map,
   bounds,
   center,
   children,
@@ -30,8 +30,6 @@ function GoogleMap({
   onTiltChanged,
   onZoomChanged,
 }) {
-
-  const map = useMap()
 
   // set map options
   useSetOptions(map, options)
@@ -64,7 +62,11 @@ function GoogleMap({
   useMapListener(map, onTiltChanged, 'tilt_changed')
   useMapListener(map, onZoomChanged, 'zoom_changed')
 
-  return children
+  return (
+    <MapProvider value={map}>
+      {children}
+    </MapProvider>
+  )
 }
 
 export default GoogleMap

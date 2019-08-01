@@ -8,12 +8,13 @@ import MapLoader from './MapLoader'
  */
 function ScriptLoader({
   url,
+  loadingElement = null,
   ...rest
 }) {
   const isScriptLoaded = useScript(url, window.google && window.google.maps)
   return isScriptLoaded ? 
-    <MapLoader {...rest} />
-  : null
+    <MapLoader loadingElement={loadingElement} {...rest} />
+    : loadingElement
 }
 
 export default ScriptLoader
