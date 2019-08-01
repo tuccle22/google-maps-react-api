@@ -9,7 +9,6 @@ const { Provider } = PolygonContext
 
 // hoook for getting the map reference
 function usePolygon() {
-  console.log(PolygonContext)
   return useContext(PolygonContext);
 }
 
@@ -17,7 +16,6 @@ function usePolygonCenter() {
   const polygon = usePolygon()
   const polygonCenter = useMemo(() => {
     if (polygon) {
-      console.log(polygon)
       return getPolygonCenter(polygon)
     } else {
       return null
