@@ -211,7 +211,6 @@ function MapWithPolygon() {
 
 | Name                | Type           | Default Value | Required  |
 | ------------------- | ---------------|---------------| --------- |
-| children            | `InfoWindow`   |               | No        |
 | options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#PolygonOptions)         |               | Yes       |     
 | EVENTS              |                |               |           |
 | onClick             | Function       |               | No        |

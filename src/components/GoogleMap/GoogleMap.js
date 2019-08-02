@@ -1,6 +1,15 @@
-import React, { useEffect } from 'react'
-import { MapProvider } from '../../contexts/map/map_context'
+import React, { useEffect, createContext, useContext } from 'react'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
+
+/**
+ * Google Map Context for sharing the map instance
+ */
+const MapContext = createContext()
+
+function useMap() {
+  return useContext(MapContext);
+}
+
 /**
  * Full Coverage
  */
@@ -63,10 +72,13 @@ function GoogleMap({
   useMapListener(map, onZoomChanged, 'zoom_changed')
 
   return (
-    <MapProvider value={map}>
+    <MapContext.Provider value={map}>
       {children}
-    </MapProvider>
+    </MapContext.Provider>
   )
 }
 
-export default GoogleMap
+export {
+  useMap,
+  GoogleMap as default
+}

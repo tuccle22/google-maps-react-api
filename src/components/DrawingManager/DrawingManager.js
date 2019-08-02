@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
-import { useMap } from '../../contexts/map/map_context';
-import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks';
+import { useMap } from '../GoogleMap/GoogleMap'
+import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
+import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 
 
 /**

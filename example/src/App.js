@@ -92,8 +92,7 @@ function App() {
         onMouseOut={onClusterMouseOut}>
         { memoizedMarkers }
       </Clusterer>
-      <Polygon paths={triangleCoords}
-        options={bermudaTriangleOpts}
+      <Polygon options={bermudaTriangleOpts}
         onMouseOver={onPolygonMouseOver}
         onMouseOut={onPolygonMouseOut}
       />
