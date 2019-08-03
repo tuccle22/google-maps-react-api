@@ -17,7 +17,13 @@ function useMapListener(mapObj, func, event) {
   }, [mapObj, func, event])
 }
 
+function AddMapListener({obj, func, event}) {
+  useMapListener(obj, func, event)
+  return null
+}
+
 export {
   useSetOptions,
-  useMapListener
+  useMapListener,
+  AddMapListener
 }

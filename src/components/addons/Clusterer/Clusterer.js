@@ -1,8 +1,8 @@
 import React, { useEffect, createContext, useContext } from 'react'
 import MarkerClusterer from '@google/markerclustererplus'
-import { useMap } from '../GoogleMap/GoogleMap'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useMapListener } from '../../helpers/hooks/map_hooks'
+import { useMap } from '../../maps/GoogleMap/GoogleMap'
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
+import { AddMapListener } from '../../../helpers/hooks/map_hooks'
 import { useSetClusterer } from './helpers'
 import { clustererEvents } from './ClustererEvents';
 /**
@@ -62,17 +62,18 @@ function Clusterer({
   useSetClusterer(clusterer, title, 'setTitle')
   useSetClusterer(clusterer, zoomOnClick, 'setZoomOnClick')
 
-  // EVENT LISTENERS
-  for (let i = 0; i < events.length; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMapListener(clusterer, ...events[clustererEvents[i]])
-  }
-
   // handles unmounting
   useEffect(() => () => clusterer.setMap(null), [clusterer])
   return (
     <ClustererContext.Provider value={clusterer}>
-      {children}
+      { children }
+      { Object.keys(events).map(funcName =>
+        <AddMapListener key={funcName}
+          obj={clusterer}
+          func={events[funcName]}
+          event={clustererEvents[funcName]}
+        />
+      )}
     </ClustererContext.Provider>
   )
 }

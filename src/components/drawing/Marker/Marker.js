@@ -1,16 +1,9 @@
-import React, { useEffect, createContext, useContext } from 'react'
-import { useMap } from '../GoogleMap/GoogleMap'
-import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useClusterer } from '../Clusterer/Clusterer'
+import React, { useCallback, useEffect, createContext, useContext } from 'react'
+import { useMap } from '../../maps/GoogleMap/GoogleMap'
+import { useSetOptions, useMapListener, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
+import { useClusterer } from '../../addons/Clusterer/Clusterer'
 import { markerEvents } from './MarkerEvents';
-/**
- * Marker Context for sharing the map instance
- */
-const MarkerContext = createContext()
-function useMarker() {
-  return useContext(MarkerContext);
-}
 /**
  * Marker
  * https://developers.google.com/maps/documentation/javascript/reference/marker
@@ -40,12 +33,6 @@ function Marker({
     marker.setPosition(center)
   }, [marker, center])
 
-  // EVENTS - add event listeners
-  for (let i = 0; i < events.length; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMapListener(marker, ...events[markerEvents[i]])
-  }
-  
   /**
   * MOUNTING / UNMOUNTING
   */
@@ -66,9 +53,26 @@ function Marker({
 
   return (
     <MarkerContext.Provider value={marker}>
-      {children}
+      <React.Fragment>
+        {children}
+        { Object.keys(events).map(funcName =>
+          <AddMapListener key={funcName}
+            obj={marker} 
+            func={events[funcName]}
+            event={markerEvents[funcName]}
+          />
+        )}
+      </React.Fragment>
     </MarkerContext.Provider>
   )
+}
+
+/**
+ * Marker Context for sharing the marker instance
+ */
+const MarkerContext = createContext()
+function useMarker() {
+  return useContext(MarkerContext);
 }
 
 export {

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
-import { useMap } from '../GoogleMap/GoogleMap'
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref';
+import { useMap } from '../../maps/GoogleMap/GoogleMap'
 
 /**
  * Hook that creates a CustomerOverlay component

@@ -1,10 +1,9 @@
-import { useEffect } from 'react'
-import { useMap } from '../GoogleMap/GoogleMap'
+import React, { useEffect } from 'react'
+import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useMarker } from '../Marker/Marker'
-import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
+import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
 import { circleEvents } from './CircleEvents'
-
 /**
  * Circle
  * https://developers.google.com/maps/documentation/javascript/reference/polygon#Circle
@@ -24,12 +23,6 @@ function Circle({
 
   // set circle options
   useSetOptions(circle, options)
-
-  // set event listeners
-  for (let i = 0; i < events.length; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMapListener(circle, ...events[circleEvents[i]])
-  }
 
   // set location, if marker context, anchor, else use center
   useEffect(() => {
@@ -57,7 +50,13 @@ function Circle({
     return () => circle.setMap(null)
   }, [map, circle, marker])
 
-  return null
+  return Object.keys(events).map(funcName =>
+    <AddMapListener key={funcName}
+      obj={circle}
+      func={events[funcName]}
+      event={circleEvents[funcName]}
+    />
+  )
 }
 
 export default Circle

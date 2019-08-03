@@ -414,7 +414,7 @@ For performance reasons, when a `Circle` is a child of a `Marker` and that `Mark
 ```jsx
 import { GoogleMap, Marker, Clusterer } from 'google-maps-react-api';
 
-const markers = Array(1000).fill(0).map((_, i) => {
+const markers = Array(1).fill(0).map((_, i) => {
   const lat = Math.random() * 360 - 180;
   const lng = Math.random() * 360 - 180;
   return ({ key: i, center: { lat, lng } });

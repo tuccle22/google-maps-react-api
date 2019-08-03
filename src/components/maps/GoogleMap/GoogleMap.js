@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useContext } from 'react'
-import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
+import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
 import { googleMapEvents } from './GoogleMapEvents';
 
 /**
@@ -32,16 +32,17 @@ function GoogleMap({
 
   // CENTER - sets center to new center
   useEffect(() => void map.panTo(center), [map, center])
-  
-  // EVENTS - add event listeners
-  for (let i = 0; i < events.length; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMapListener(map, ...events[googleMapEvents[i]])
-  }
 
   return (
     <MapContext.Provider value={map}>
-      {children}
+      { children }
+      { Object.keys(events).map(funcName =>
+        <AddMapListener key={funcName}
+          obj={map}
+          func={events[funcName]}
+          event={googleMapEvents[funcName]}
+        />
+      )}
     </MapContext.Provider>
   )
 }

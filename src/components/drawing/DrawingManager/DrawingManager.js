@@ -1,10 +1,8 @@
-import { useEffect } from 'react'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
-import { useMap } from '../GoogleMap/GoogleMap';
-import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks';
-import { drawingManagerEvents } from './DrawingManagerEvents';
-
-
+import React, { useEffect } from 'react'
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
+import { useMap } from '../../maps/GoogleMap/GoogleMap'
+import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { drawingManagerEvents } from './DrawingManagerEvents'
 /**
  * DrawingManager
  * https://developers.google.com/maps/documentation/javascript/reference/drawing#DrawingManager
@@ -22,21 +20,20 @@ function DrawingManager({
 
   // set drawing manager options
   useSetOptions(drawingManager, options)
-
-  // event listeners
-  for (let i = 0; i < events.length; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMapListener(drawingManager, ...events[drawingManagerEvents[i]])
-  }
   
-
   // handle drawing manager mounting/unmounting
   useEffect(() => {
     drawingManager.setMap(map)
     return () => drawingManager.setMap(null)
   }, [map, drawingManager])
 
-  return null
+  return Object.keys(events).map(funcName =>
+    <AddMapListener key={funcName}
+      obj={drawingManager}
+      func={events[funcName]}
+      event={drawingManagerEvents[funcName]}
+    />
+  )
 }
 
 export default DrawingManager

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import GoogleMap from '../GoogleMap/GoogleMap'
+import GoogleMap from '../maps/GoogleMap/GoogleMap'
 /**
  * This component handles rendering the GoogleMap,
  * which is basically a set of listeners
@@ -28,12 +28,12 @@ function MapLoader({
   return (
     <div ref={mapRef} {...containerProps}>
       { map ? 
-          <GoogleMap map={map} 
-            center={center} 
-            options={options} 
-            {...rest}
-          />
-        : null
+        <GoogleMap map={map} 
+          center={center} 
+          options={options} 
+          {...rest}
+        />
+      : null
       }
     </div>
   )

@@ -1,25 +1,31 @@
+// maps
 import GoogleMap from './components/helpers/ScriptLoader'
-import Marker from './components/Marker/Marker'
-import Circle from './components/Circle/Circle'
-import Clusterer from './components/Clusterer/Clusterer'
-import InfoWindow from './components/InfoWindow/InfoWindow'
-import Polygon from './components/Polygon/Polygon'
-import OverlayView from './components/OverlayView/OverlayView'
-import DrawingManager from './components/DrawingManager/DrawingManager'
+// drawing
+import Circle from './components/drawing/Circle/Circle'
+import DrawingManager from './components/drawing/DrawingManager/DrawingManager'
+import InfoWindow from './components/drawing/InfoWindow/InfoWindow'
+import Marker from './components/drawing/Marker/Marker'
+import OverlayView from './components/drawing/OverlayView/OverlayView'
+import Polygon from './components/drawing/Polygon/Polygon'
+// addons
+import Clusterer from './components/addons/Clusterer/Clusterer'
 
+// TODO: remove these
 import { getLatLng, getPolygonCenter } from './helpers/utils/map_utils'
 
 export {
   // helpers
   getLatLng,
   getPolygonCenter,
-  // components
-  Circle,
-  Clusterer,
-  DrawingManager,
+  // maps
   GoogleMap,
+  // drawing
+  Circle,
+  DrawingManager,
   InfoWindow,
   Marker,
   OverlayView,
-  Polygon
+  Polygon,
+  // addons
+  Clusterer
 }

@@ -1,11 +1,10 @@
-import { Children, useEffect } from 'react'
+import React, { Children, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useMap } from '../GoogleMap/GoogleMap'
+import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useMarker } from '../Marker/Marker'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
-import { infoWindowEvents } from './InfoWindowEvents';
-
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
+import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { infoWindowEvents } from './InfoWindowEvents'
 /**
  * InfoWindow
  * https://developers.google.com/maps/documentation/javascript/reference/info-window
@@ -31,12 +30,6 @@ function InfoWindow({
 
   // handle info window options
   useSetOptions(infoWindow, options)
-
-  // EVENTS - add event listeners
-  for (let i = 0; i < events.length; i++) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useMapListener(infoWindow, ...events[infoWindowEvents[i]])
-  }
 
   // handle info window position, when no anchor
   useEffect(() => {
@@ -66,7 +59,18 @@ function InfoWindow({
   }, [map, marker, anchor, infoWindow, children])
 
   // TODO not sure if I need to use Children.only here
-  return createPortal(Children.only(children), div)
+  return createPortal(Children.only(
+    <React.Fragment>
+      { children }
+      { Object.keys(events).map(funcName =>
+        <AddMapListener key={funcName}
+          obj={infoWindow}
+          func={events[funcName]}
+          event={infoWindowEvents[funcName]}
+        />
+      )}
+    </React.Fragment>
+  ), div)
 }
 
 export default InfoWindow

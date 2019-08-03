@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom'
 import { memo, useMemo } from 'react'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
+import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
 import { useCustomOverlay } from './helper'
 /**
  * OverlayView
