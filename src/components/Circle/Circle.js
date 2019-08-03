@@ -3,6 +3,8 @@ import { useMap } from '../GoogleMap/GoogleMap'
 import { useMarker } from '../Marker/Marker'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
+import { useMarker } from '../../contexts/marker/marker_context'
+import { circleEvents } from './CircleEvents'
 
 /**
  * Full Coverage
@@ -10,20 +12,7 @@ import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 function Circle({
   center,
   options,
-  // events
-  onCenterChanged,
-  onClick,
-  onDblClick,
-  onDrag,
-  onDragEnd,
-  onDragStart,
-  onMouseDown,
-  onMouseMove,
-  onMouseOut,
-  onMouseOver,
-  onMouseUp,
-  onRadiusChanged,
-  onRightClick
+  ...events
 }) {
   const map = useMap()
   const marker = useMarker()
@@ -37,19 +26,10 @@ function Circle({
   useSetOptions(circle, options)
 
   // set event listeners
-  useMapListener(circle, onCenterChanged, 'center_changed')
-  useMapListener(circle, onClick, 'click')
-  useMapListener(circle, onDblClick, 'dblclick')
-  useMapListener(circle, onDrag, 'drag')
-  useMapListener(circle, onDragEnd, 'dragend')
-  useMapListener(circle, onDragStart, 'dragstart')
-  useMapListener(circle, onMouseDown, 'mousedown')
-  useMapListener(circle, onMouseMove, 'mousemove')
-  useMapListener(circle, onMouseOut, 'mouseout')
-  useMapListener(circle, onMouseOver, 'mouseover')
-  useMapListener(circle, onMouseUp, 'mouseup')
-  useMapListener(circle, onRadiusChanged, 'radius_changed')
-  useMapListener(circle, onRightClick, 'rightclick')
+  for (let i = 0; i < events.length; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useMapListener(circle, ...events[circleEvents[i]])
+  }
 
   // set location, if marker context, anchor, else use center
   useEffect(() => {

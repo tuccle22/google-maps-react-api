@@ -4,6 +4,7 @@ import { useMap } from '../GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useMapListener } from '../../helpers/hooks/map_hooks'
 import { useSetClusterer } from './helpers'
+import { clustererEvents } from './ClustererEvents';
 /**
  * Clusterer Context for sharing the clusterer instance
  */
@@ -32,12 +33,8 @@ function Clusterer({
   styles,
   title,
   zoomOnClick,
-  // clusterer event listeners
-  onClick,
-  onClusteringBegin,
-  onClusteringEnd,
-  onMouseOut,
-  onMouseOver
+  // events
+  ...events
 }) {
   const map = useMap()
 
@@ -65,11 +62,10 @@ function Clusterer({
   useSetClusterer(clusterer, zoomOnClick, 'setZoomOnClick')
 
   // EVENT LISTENERS
-  useMapListener(clusterer, onClick, 'click')
-  useMapListener(clusterer, onClusteringBegin, 'clusteringbegin')
-  useMapListener(clusterer, onClusteringEnd, 'clusteringend')
-  useMapListener(clusterer, onMouseOver, 'mouseover')
-  useMapListener(clusterer, onMouseOut, 'mouseout')
+  for (let i = 0; i < events.length; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useMapListener(clusterer, ...events[clustererEvents[i]])
+  }
 
   // handles unmounting
   useEffect(() => () => clusterer.setMap(null), [clusterer])

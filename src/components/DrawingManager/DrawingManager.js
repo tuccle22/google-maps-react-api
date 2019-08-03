@@ -1,4 +1,8 @@
 import { useEffect } from 'react'
+import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
+import { useMap } from '../../contexts/map/map_context';
+import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks';
+import { drawingManagerEvents } from './DrawingManagerEvents';
 import { useMap } from '../GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
@@ -9,12 +13,7 @@ import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
  */
 function DrawingManager({
   options,
-  onCircleComplete,
-  onMarkerComplete,
-  onOverlayComplete,
-  onPolygonComplete,
-  onPolyLineComplete,
-  onRectangleComplete
+  ...events
 }) {
 
   const map = useMap()
@@ -27,12 +26,11 @@ function DrawingManager({
   useSetOptions(drawingManager, options)
 
   // event listeners
-  useMapListener(drawingManager, onCircleComplete, 'circlecomplete')
-  useMapListener(drawingManager, onMarkerComplete, 'markercomplete')
-  useMapListener(drawingManager, onOverlayComplete, 'overlaycomplete')
-  useMapListener(drawingManager, onPolygonComplete, 'polygoncomplete')
-  useMapListener(drawingManager, onPolyLineComplete, 'polylinecomplete')
-  useMapListener(drawingManager, onRectangleComplete, 'rectanglecomplete')
+  for (let i = 0; i < events.length; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useMapListener(drawingManager, ...events[drawingManagerEvents[i]])
+  }
+  
 
   // handle drawing manager mounting/unmounting
   useEffect(() => {

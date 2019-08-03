@@ -1,9 +1,11 @@
 import React, { useEffect, createContext, useContext } from 'react'
-import { useMap } from '../GoogleMap/GoogleMap'
-import { useClusterer } from '../Clusterer/Clusterer'
-import { useSetOptions } from '../../helpers/hooks/map_hooks'
+import { useMap } from '../../contexts/map/map_context'
+import { MarkerProvider } from '../../contexts/marker/marker_context'
+import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useMouseEvents } from '../../helpers/hooks/map_events'
+import { useClusterer } from '../../contexts/marker_clusterer/marker_clusterer_context'
+import { markerEvents } from './MarkerEvents';
+import { useClusterer } from '../Clusterer/Clusterer'
 /**
  * Marker Context for sharing the map instance
  */
@@ -21,15 +23,7 @@ function Marker({
   options,
   noRedraw,
   // events
-  onClick,
-  onDblClick,
-  onDrag,
-  onDragEnd,
-  onDragStart,
-  onMouseDown,
-  onMouseOut,
-  onMouseOver,
-  onMouseUp
+  ...events
 }) {
 
   const map = useMap()
@@ -48,17 +42,12 @@ function Marker({
     marker.setPosition(center)
   }, [marker, center])
 
-  useMouseEvents(marker, {
-    onClick,
-    onDblClick,
-    onDrag,
-    onDragEnd,
-    onDragStart,
-    onMouseDown,
-    onMouseOut,
-    onMouseOver,
-    onMouseUp
-  })
+  // EVENTS - add event listeners
+  for (let i = 0; i < events.length; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useMapListener(marker, ...events[markerEvents[i]])
+  }
+  
   /**
   * MOUNTING / UNMOUNTING
   */

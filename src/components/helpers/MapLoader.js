@@ -14,9 +14,7 @@ function MapLoader({
 }) {
   const [map, setMap] = useState(null)
 
-  /**
-   * MAP - sets map in the state
-   */
+  // sets reference to the map
   const mapRef = useCallback(node => {
     if (node !== null) {
       setMap(new window.google.maps.Map(node, {
