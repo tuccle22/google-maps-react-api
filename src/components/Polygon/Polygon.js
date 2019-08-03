@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
+import { useMap } from '../GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
-import { useMap } from '../../contexts/map/map_context';
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks';
 import { PolygonProvider } from '../../contexts/polygon/polygon_context';
 import { polygonEvents } from './PolygonEvents';
+import { useSetOptions } from '../../helpers/hooks/map_hooks';
 
 /**
  * Working fully as far as I can tell
  */
 function Polygon({
-  children,
   options,
   // mouse events
   ...events
@@ -36,11 +36,7 @@ function Polygon({
     return () => polygon.setMap(null)
   }, [map, polygon])
 
-  return (
-    <PolygonProvider value={polygon}>
-      {children}
-    </PolygonProvider>
-  )
+  return null
 }
 
 export default Polygon

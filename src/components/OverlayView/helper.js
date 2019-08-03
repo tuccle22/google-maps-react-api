@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
-import { useMap } from '../../contexts/map/map_context';
-
+import { useMap } from '../GoogleMap/GoogleMap'
 
 function useCustomOverlay() {
   const map = useMap()

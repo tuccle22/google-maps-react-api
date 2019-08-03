@@ -26,7 +26,7 @@ function SimpleMap() {
       <GoogleMap mapRef={getMapRef} zoom={zoom} {...otherProps} />
       <button onClick={() => setZoom(5)}>Declarative Zoom</button>
       <button onClick={() => map.setZoom(10)}>Imperative Zoom</button>
-    </Reac.Fragment>
+    </React.Fragment>
   );
 }
 ```
@@ -211,7 +211,6 @@ function MapWithPolygon() {
 
 | Name                | Type           | Default Value | Required  |
 | ------------------- | ---------------|---------------| --------- |
-| children            | `InfoWindow`   |               | No        |
 | options             | [Object](https://developers.google.com/maps/documentation/javascript/reference/polygon#PolygonOptions)         |               | Yes       |     
 | EVENTS              |                |               |           |
 | onClick             | Function       |               | No        |

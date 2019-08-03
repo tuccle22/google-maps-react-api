@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, createContext, useContext } from 'react'
 import { useMap } from '../../contexts/map/map_context'
 import { MarkerProvider } from '../../contexts/marker/marker_context'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useClusterer } from '../../contexts/marker_clusterer/marker_clusterer_context'
 import { markerEvents } from './MarkerEvents';
-
+import { useClusterer } from '../Clusterer/Clusterer'
+/**
+ * Marker Context for sharing the map instance
+ */
+const MarkerContext = createContext()
+function useMarker() {
+  return useContext(MarkerContext);
+}
 /**
  * Full API Coverage, i think
  * Needs more event coverage
@@ -40,7 +47,7 @@ function Marker({
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useMapListener(marker, ...events[markerEvents[i]])
   }
-
+  
   /**
   * MOUNTING / UNMOUNTING
   */
@@ -60,10 +67,13 @@ function Marker({
   }, [map, marker, clusterer, noRedraw])
 
   return (
-    <MarkerProvider value={marker}>
+    <MarkerContext.Provider value={marker}>
       {children}
-    </MarkerProvider>
+    </MarkerContext.Provider>
   )
 }
 
-export default Marker
+export {
+  useMarker,
+  Marker as default
+}

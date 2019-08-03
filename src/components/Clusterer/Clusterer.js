@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react'
-import { ClustererProvider } from '../../contexts/marker_clusterer/marker_clusterer_context'
-import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useMap } from '../../contexts/map/map_context'
+import React, { useEffect, createContext, useContext } from 'react'
 import MarkerClusterer from '@google/markerclustererplus'
+import { useMap } from '../GoogleMap/GoogleMap'
+import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useMapListener } from '../../helpers/hooks/map_hooks'
 import { useSetClusterer } from './helpers'
 import { clustererEvents } from './ClustererEvents';
-
+/**
+ * Clusterer Context for sharing the clusterer instance
+ */
+const ClustererContext = createContext()
+function useClusterer() {
+  return useContext(ClustererContext)
+}
 /**
  * Full API Coverage, i think
  */
@@ -64,14 +69,16 @@ function Clusterer({
 
   // handles unmounting
   useEffect(() => () => clusterer.setMap(null), [clusterer])
-
   return (
-    <ClustererProvider value={clusterer}>
+    <ClustererContext.Provider value={clusterer}>
       {children}
-    </ClustererProvider>
+    </ClustererContext.Provider>
   )
 }
 
 
 
-export default Clusterer
+export {
+  useClusterer,
+  Clusterer as default
+}
