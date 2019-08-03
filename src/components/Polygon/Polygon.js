@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
 import { useMap } from '../../contexts/map/map_context';
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks';
-import { useMouseEvents } from '../../helpers/hooks/map_events';
 import { PolygonProvider } from '../../contexts/polygon/polygon_context';
 import { polygonEvents } from './PolygonEvents';
 
