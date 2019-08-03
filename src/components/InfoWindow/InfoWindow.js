@@ -2,8 +2,9 @@ import { createPortal } from 'react-dom'
 import { Children, useEffect } from 'react'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useMap } from '../../contexts/map/map_context'
-import { useSetOptions } from '../../helpers/hooks/map_hooks'
+import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useMarker } from '../../contexts/marker/marker_context'
+import { infoWindowEvents } from './InfoWindowEvents';
 
 /**
  * WORKING - events?
@@ -12,7 +13,8 @@ function InfoWindow({
   center,
   children,
   anchor,
-  options
+  options,
+  ...events
 }) {
 
   const map = useMap()
@@ -28,6 +30,12 @@ function InfoWindow({
 
   // handle info window options
   useSetOptions(infoWindow, options)
+
+  // EVENTS - add event listeners
+  for (let i = 0; i < events.length; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useMapListener(infoWindow, ...events[infoWindowEvents[i]])
+  }
 
   // handle info window position, when no anchor
   useEffect(() => {

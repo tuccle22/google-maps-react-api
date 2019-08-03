@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useMap } from '../../contexts/map/map_context'
 import { MarkerProvider } from '../../contexts/marker/marker_context'
-import { useSetOptions } from '../../helpers/hooks/map_hooks'
+import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useClusterer } from '../../contexts/marker_clusterer/marker_clusterer_context'
-import { useMouseEvents } from '../../helpers/hooks/map_events'
+import { markerEvents } from './MarkerEvents';
 
 /**
  * Full API Coverage, i think
@@ -16,15 +16,7 @@ function Marker({
   options,
   noRedraw,
   // events
-  onClick,
-  onDblClick,
-  onDrag,
-  onDragEnd,
-  onDragStart,
-  onMouseDown,
-  onMouseOut,
-  onMouseOver,
-  onMouseUp
+  ...events
 }) {
 
   const map = useMap()
@@ -43,17 +35,11 @@ function Marker({
     marker.setPosition(center)
   }, [marker, center])
 
-  useMouseEvents(marker, {
-    onClick,
-    onDblClick,
-    onDrag,
-    onDragEnd,
-    onDragStart,
-    onMouseDown,
-    onMouseOut,
-    onMouseOver,
-    onMouseUp
-  })
+  // EVENTS - add event listeners
+  for (let i = 0; i < events.length; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useMapListener(marker, ...events[markerEvents[i]])
+  }
 
   /**
   * MOUNTING / UNMOUNTING

@@ -8,7 +8,7 @@ function useSetOptions(mapObj, opts) {
 
 function useMapListener(mapObj, func, event) {
   useEffect(() => {
-    if (mapObj && func) {
+    if (func) {
       // function that passes back all event and the mapObj itself
       const enhancedFunc = (...e) => func(...e, mapObj)
       const listener = mapObj.addListener(event, enhancedFunc)
