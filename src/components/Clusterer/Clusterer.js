@@ -13,7 +13,8 @@ function useClusterer() {
   return useContext(ClustererContext)
 }
 /**
- * Full API Coverage, i think
+ * Clusterer
+ * https://github.com/googlemaps/v3-utility-library/tree/master/markerclustererplus
  */
 function Clusterer({
   children,

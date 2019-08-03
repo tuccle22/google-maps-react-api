@@ -6,7 +6,8 @@ import { drawingManagerEvents } from './DrawingManagerEvents';
 
 
 /**
- * WORKING - haven't tried anything complicated
+ * DrawingManager
+ * https://developers.google.com/maps/documentation/javascript/reference/drawing#DrawingManager
  */
 function DrawingManager({
   options,

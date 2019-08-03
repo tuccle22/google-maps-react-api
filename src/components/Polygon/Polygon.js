@@ -5,7 +5,8 @@ import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks';
 import { polygonEvents } from './PolygonEvents';
 
 /**
- * Working fully as far as I can tell
+ * Polygon
+ * https://developers.google.com/maps/documentation/javascript/reference/polygon#Polygon
  */
 function Polygon({
   options,

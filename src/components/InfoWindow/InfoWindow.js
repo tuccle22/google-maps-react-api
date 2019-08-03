@@ -7,7 +7,8 @@ import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { infoWindowEvents } from './InfoWindowEvents';
 
 /**
- * WORKING - events?
+ * InfoWindow
+ * https://developers.google.com/maps/documentation/javascript/reference/info-window
  */
 function InfoWindow({
   center,

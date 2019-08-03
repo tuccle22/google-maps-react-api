@@ -6,7 +6,8 @@ import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { circleEvents } from './CircleEvents'
 
 /**
- * Full Coverage
+ * Circle
+ * https://developers.google.com/maps/documentation/javascript/reference/polygon#Circle
  */
 function Circle({
   center,

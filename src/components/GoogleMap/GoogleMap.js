@@ -10,7 +10,8 @@ function useMap() {
   return useContext(MapContext);
 }
 /**
- * Full Coverage
+ * GoogleMap
+ * https://developers.google.com/maps/documentation/javascript/reference/map
  */
 function GoogleMap({
   map,

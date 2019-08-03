@@ -12,8 +12,8 @@ function useMarker() {
   return useContext(MarkerContext);
 }
 /**
- * Full API Coverage, i think
- * Needs more event coverage
+ * Marker
+ * https://developers.google.com/maps/documentation/javascript/reference/marker
  */
 function Marker({
   center,

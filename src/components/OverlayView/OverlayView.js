@@ -3,9 +3,8 @@ import { memo, useMemo } from 'react'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useCustomOverlay } from './helper'
 /**
- * Probably could use a hook to be able to position it
- * left, right, top, bottom and figure out how it's positioned
- * now
+ * OverlayView
+ * https://developers.google.com/maps/documentation/javascript/reference/overlay-view#OverlayView
  */
 function OverlayView({
   center,

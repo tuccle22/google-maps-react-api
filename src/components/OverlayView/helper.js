@@ -2,6 +2,11 @@ import { useMemo } from 'react'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref';
 import { useMap } from '../GoogleMap/GoogleMap'
 
+/**
+ * Hook that creates a CustomerOverlay component
+ * with the prototype of google maps OverlayView
+ * returns an array of [instance, class]
+ */
 function useCustomOverlay() {
   const map = useMap()
   const CustomOverlay = useMemo(() => {
