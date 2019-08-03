@@ -18,10 +18,11 @@ import {
 import { googleMapsApiKey } from './keys'
 import { useInterval } from './helpers/utils'
 import { useMarkerHover, useClusterHover, usePolygonHover, reducer, initState } from './state'
+
 const GoogleMapsBase = 'https://maps.googleapis.com/maps/api/js'
 const fullUrl = `${GoogleMapsBase}?key=${googleMapsApiKey}&libraries=geometry,drawing`
 
-const markers = Array(10).fill(0).map((_, i) => {
+const markers = Array(1000).fill(0).map((_, i) => {
   const lat = Math.random() * 360 - 180
   const lng = Math.random() * 360 - 180
   return ({ key: i, center: { lat, lng } })

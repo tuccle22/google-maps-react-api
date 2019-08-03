@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, createContext, useContext } from 'react'
+import React, { useEffect, createContext, useContext } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
-import { useSetOptions, useMapListener, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
 import { useClusterer } from '../../addons/Clusterer/Clusterer'
-import { markerEvents } from './MarkerEvents';
+import { markerEvents } from './MarkerEvents'
 /**
  * Marker
  * https://developers.google.com/maps/documentation/javascript/reference/marker

@@ -8,12 +8,10 @@ function useSetOptions(mapObj, opts) {
 
 function useMapListener(mapObj, func, event) {
   useEffect(() => {
-    if (func) {
-      // function that passes back all event and the mapObj itself
-      const enhancedFunc = (...e) => func(...e, mapObj)
-      const listener = mapObj.addListener(event, enhancedFunc)
-      return () => window.google.maps.event.removeListener(listener)
-    }
+    // function that passes back all event and the mapObj itself
+    const enhancedFunc = (...e) => func(...e, mapObj)
+    const listener = mapObj.addListener(event, enhancedFunc)
+    return () => window.google.maps.event.removeListener(listener)
   }, [mapObj, func, event])
 }
 

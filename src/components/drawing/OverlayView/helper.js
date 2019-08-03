@@ -23,5 +23,12 @@ function useCustomOverlay() {
   return [customOverlay, CustomOverlay]
 }
 
+const PANES = {
+  FLOAT_PANE: 'floatPane',
+  MAP_PANE: 'mapPane',
+  MARKER_LAYER: 'markerLayer',
+  OVERLAY_LAYER: 'overlayLayer',
+  OVERLAY_MOUSE_TARGET: 'overlayMouseTarget'
+}
 
-export { useCustomOverlay }
+export { useCustomOverlay, PANES }
