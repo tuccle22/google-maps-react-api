@@ -3,11 +3,8 @@ import { createPortal } from 'react-dom'
 import { useMap } from '../GoogleMap/GoogleMap'
 import { useMarker } from '../Marker/Marker'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useMap } from '../../contexts/map/map_context'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
-import { useMarker } from '../../contexts/marker/marker_context'
 import { infoWindowEvents } from './InfoWindowEvents';
-import { useSetOptions } from '../../helpers/hooks/map_hooks'
 
 /**
  * WORKING - events?

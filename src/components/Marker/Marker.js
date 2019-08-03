@@ -1,11 +1,9 @@
 import React, { useEffect, createContext, useContext } from 'react'
 import { useMap } from '../../contexts/map/map_context'
-import { MarkerProvider } from '../../contexts/marker/marker_context'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
 import { useClusterer } from '../../contexts/marker_clusterer/marker_clusterer_context'
 import { markerEvents } from './MarkerEvents';
-import { useClusterer } from '../Clusterer/Clusterer'
 /**
  * Marker Context for sharing the map instance
  */

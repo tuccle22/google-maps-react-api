@@ -3,7 +3,6 @@ import { useMap } from '../GoogleMap/GoogleMap'
 import { useMarker } from '../Marker/Marker'
 import { useSetOptions, useMapListener } from '../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../helpers/hooks/use_callback_ref'
-import { useMarker } from '../../contexts/marker/marker_context'
 import { circleEvents } from './CircleEvents'
 
 /**
