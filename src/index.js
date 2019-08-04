@@ -1,7 +1,7 @@
 // maps
 import BicyclingLayer from './components/maps/BicyclingLayer/BicyclingLayer'
 import GoogleMap from './components/helpers/ScriptLoader'
-import TrafficLayer from './components/maps/TrafficLayer'
+import TrafficLayer from './components/maps/TrafficLayer/TrafficLayer'
 import TransitLayer from './components/maps/TransitLayer/TransitLayer'
 // drawing
 import Circle from './components/drawing/Circle/Circle'
