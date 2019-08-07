@@ -1,6 +1,6 @@
 // maps
 import BicyclingLayer from './components/maps/BicyclingLayer/BicyclingLayer'
-import GoogleMap from './components/helpers/ScriptLoader'
+import GoogleMap from './components/maps/GoogleMap/helper/LoadMap'
 import TrafficLayer from './components/maps/TrafficLayer/TrafficLayer'
 import TransitLayer from './components/maps/TransitLayer/TransitLayer'
 // drawing
@@ -12,6 +12,15 @@ import OverlayView from './components/drawing/OverlayView/OverlayView'
 import Polygon from './components/drawing/Polygon/Polygon'
 import Polyline from './components/drawing/Polyline/Polyline'
 import Rectangle from './components/drawing/Rectangle/Rectangle'
+// routes
+import DirectionsRenderer from './components/routes/DirectionsRenderer/DirectionsRenderer'
+import useDirectionsRequest from './components/routes/DirectionsRenderer/useDirectionsRequest'
+// places
+// import AutoComplete from './components/places/AutoComplete/AutoComplete'
+import AutoComplete from './components/places/AutoComplete/LoadAutoComplete'
+import SearchBox from './components/places/SearchBox/LoadSearchBox'
+// street view
+import StreetViewPanorama from './components/street_view/StreetViewPanamora/StreetViewPanorama'
 // addons
 import Clusterer from './components/addons/Clusterer/Clusterer'
 
@@ -36,6 +45,14 @@ export {
   Polygon,
   Polyline,
   Rectangle,
+  // places
+  AutoComplete,
+  SearchBox,
+  // routes
+  DirectionsRenderer,
+  useDirectionsRequest,
+  // street view
+  StreetViewPanorama,
   // addons
   Clusterer
 }

@@ -1,14 +1,6 @@
 import React, { useEffect, createContext, useContext } from 'react'
 import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
 import { googleMapEvents } from './GoogleMapEvents';
-
-/**
- * Google Map Context for sharing the map instance
- */
-const MapContext = createContext()
-function useMap() {
-  return useContext(MapContext);
-}
 /**
  * GoogleMap
  * https://developers.google.com/maps/documentation/javascript/reference/map
@@ -45,6 +37,13 @@ function GoogleMap({
       )}
     </MapContext.Provider>
   )
+}
+/**
+ * Google Map Context for sharing the map instance
+ */
+const MapContext = createContext()
+function useMap() {
+  return useContext(MapContext);
 }
 
 export {

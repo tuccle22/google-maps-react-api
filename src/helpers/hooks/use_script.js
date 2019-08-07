@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 
 /**
  * useScript(someUrl, window.google && window.google.maps)
@@ -9,11 +9,11 @@ import { useEffect, useState } from 'react'
  * the status of the script loading
  */
 function useScript(url, alreadyLoaded) {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(alreadyLoaded)
 
   useEffect(() => {
     // only mount script if passed in val doesn't exist
-    if (!alreadyLoaded) {
+    if (!isLoaded) {
       const script = document.createElement('script')
 
       script.src = url
