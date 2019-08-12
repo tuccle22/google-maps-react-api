@@ -13,28 +13,26 @@ yarn add google-maps-react-api
 
 <details><summary>Motivations behind this api</summary>
 
-There are inherent pitfalls when mixing a declarative api like this one, with the underlying imperative objects that make this api possible. This api aims to solve a problem (perhaps a very edge case) where `prop` "changes" don't produce the intended `effect`. Imagine the following scenario:
+This api aims to solve a problem where `prop` "changes" don't produce the intended effect. Imagine the following scenario:
 
 1. You create a `SimpleMap` component with a few buttons that also has a `GoogleMap` component with a `zoom` prop that takes a `number` and looks like the following:
 ```jsx
 // this is not the real api
-function SimpleMap() {
+function SimpleMap({...otherProps}) {
   const [zoom, setZoom] = useState(3);
-  const map = getMapRef;
   return (
     <React.Fragment>
-      <GoogleMap mapRef={getMapRef} zoom={zoom} {...otherProps} />
-      <button onClick={() => setZoom(5)}>Declarative Zoom</button>
-      <button onClick={() => map.setZoom(10)}>Imperative Zoom</button>
+      <GoogleMap zoom={zoom} {...otherProps} />
+      <button onClick={() => setZoom(5)}>Set Zoom to 5</button>
     </React.Fragment>
   );
 }
 ```
-2. The map is initially set to a `zoom` level of `3`. Click the 'Declarative Zoom' button and the map zooms in to level `5`.
-3. Now click the 'Imperative Zoom' button and the map zooms in to level `10`.
-4. Now click the 'Declarative Zoom' button again. The expectation is that the map would zoom back to level `5`, but how could the `GoogleMap` component handle this change? From the `GoogleMap` component's perspective, it has received the same `zoom` prop value twice, as it has no awareness of the imperative `map.setZoom(10)` call in between the two declarative calls... 
+2. The map is initially set to a `zoom` level of `3`. Click the button and the map zooms in to level `5`.
+3. Now zoom the map using the scroll wheel to zoom in to level 10.
+4. Click the button once more. The expectation is that the map would zoom back to level `5`, but how could the `GoogleMap` component handle this change? From the `GoogleMap` component's perspective, it has received the same `zoom` prop value twice, as it has no awareness of the scroll wheel zooming. 
 ```js
-Object.is(5, 5) === true // Object.is is what react uses to run effects
+Object.is(5, 5) === true // Object.is is the algorithm react uses to compae
 ```
 #### Solution
 The answer to this problem is to pass an `object` as props, because:
@@ -44,14 +42,12 @@ Object.is({}, {}) === false
 With this in mind, consider if the `SimpleMap` component used a `GoogleMap` component that accepts an `options` prop of an `object` like this:
 ```jsx
 // mapRef is not a real prop on the GoogleMap component in this library
-function SimpleMap() {
+function SimpleMap({...otherProps}) {
   const [options, setOptions] = useState({zoom: 3});
-  const map = getMapRef;
   return (
     <React.Fragment>
-      <GoogleMap mapRef={getMapRef} options={options} {...otherProps} />
-      <button onClick={() => setOptions({zoom: 5})}>Declarative Zoom</button>
-      <button onClick={() => map.setZoom(10)}>Imperative Zoom</button>
+      <GoogleMap options={options} {...otherProps} />
+      <button onClick={() => setZoom(5)}>Set Zoom to 5</button>
     </React.Fragment>
   );
 }

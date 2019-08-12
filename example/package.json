@@ -6,8 +6,9 @@
   "private": true,
   "dependencies": {
     "@google/markerclustererplus": "^2.1.11",
-    "prop-types": "^15.6.2",
+    "antd": "^3.21.2",
     "google-maps-react-api": "link:..",
+    "prop-types": "^15.6.2",
     "react-scripts": "^3.0.1"
   },
   "scripts": {

@@ -1,20 +1,18 @@
-import React, { useMemo } from 'react'
-import ScriptLoader from '../../../helpers/ScriptLoader';
-import OnMapLoad from './OnMapLoad'
+import React from 'react'
+import { useScript } from '../../../../helpers/hooks/use_script';
+import GoogleMap from '../GoogleMap';
 
 function LoadMap({
   url,
+  loadingElement = null,
   ...rest
 }) {
-  const isAlreadyLoaded = useMemo(() => {
-    return !!(window.google && window.google.maps)
-  }, [])
-  return (
-    <ScriptLoader url={url}
-      Element={OnMapLoad}
-      isAlreadyLoaded={isAlreadyLoaded}
-      {...rest}
-    />
+  const isLoaded = useScript(url, !!(window.google && window.google.maps))
+  console.log(isLoaded)
+  return isLoaded ? (
+    <GoogleMap {...rest} />
+  ) : (
+    loadingElement
   )
 }
 

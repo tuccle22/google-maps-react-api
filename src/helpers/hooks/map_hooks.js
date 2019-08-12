@@ -11,6 +11,13 @@ function SetOptions({obj, opts}) {
   return null
 }
 
+function SetOption({obj, func, args}) {
+  useEffect(() => {
+    obj[func](args)
+  }, [obj, func, args])
+  return null
+}
+
 function useMapListener(mapObj, func, event) {
   useEffect(() => {
     // function that passes back all event and the mapObj itself
@@ -28,6 +35,7 @@ function AddMapListener({obj, func, event}) {
 export {
   useSetOptions,
   SetOptions,
+  SetOption,
   useMapListener,
   AddMapListener
 }
