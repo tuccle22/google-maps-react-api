@@ -63,8 +63,8 @@ This will handle the previously outlined steps, and our expectations, correctly.
 #### center - `{ lat: number, lng: number }`
 All components that are positioned on the map accepts this prop.
 
-#### options - `{ ...object }`
-All components that implement setOptions accepts this prop.
+#### options - `{ ..opts }`
+All `google.maps` objects that implement setOptions accepts this prop. Only pass in the options that you want to update, instead of all the properties that describe the option.
 
 #### events
 Along with any `event` passed back from the google maps v3 api, a reference to the underlying `google.maps` object is returned. This is the hook that handles the events:

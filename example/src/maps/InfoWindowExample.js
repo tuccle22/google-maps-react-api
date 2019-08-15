@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { GoogleMap, OverlayView } from 'google-maps-react-api';
 import { googleMapsApiUrl } from '../constants';
 
@@ -6,13 +6,11 @@ const center = { lat: 45, lng: -45 }
 const initialOpts = { zoom: 8, mapTypeId: 'satellite' }
 const defaultOptions = { ...initialOpts, update: initialOpts }
 
-function optionsUpdater(currentOpts, newOpts) {
-  return ({
-    ...currentOpts,
-    ...newOpts,
-    update: newOpts
-  })
-}
+const optionsUpdater = (currentOpts, newOpts) => ({
+  ...currentOpts,
+  ...newOpts,
+  update: newOpts
+})
 function InfoWindowExample() {
 
   const [opts, setOpts] = useReducer(optionsUpdater, defaultOptions)
