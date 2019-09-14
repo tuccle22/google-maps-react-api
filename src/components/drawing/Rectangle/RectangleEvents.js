@@ -10,5 +10,5 @@ export const rectangleEvents = {
   onMouseOut: 'mouseout',
   onMouseOver: 'mouseover',
   onMouseUp: 'mouseup',
-  onRightclick: 'rightclick'
+  onRightClick: 'rightclick'
 }
