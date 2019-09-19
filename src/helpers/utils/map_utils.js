@@ -1,4 +1,4 @@
-
+// shouldn't be in the library
 
 function getLatLng(latLngObj) {
   const lat = latLngObj.lat()

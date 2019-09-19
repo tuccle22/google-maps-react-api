@@ -1,17 +1,23 @@
-import { useRef, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-function useNodeRefConstructor(clazz, args) {
-  const [obj, setObj] = useState(null)
-  const el = useRef(null)
+/**
+ * Creates a class instance that needs
+ * a dom reference to instantiate the class
+ * Returns an array of two values:
+ * 1. Function - takes a dom ref
+ * 2. classInstance - null on initial render
+ * @param {Class} clazz
+ * @param {Object} arg
+ * @returns {Array} [refCallback, classInstance]
+ */
+function useNodeRefConstructor(clazz, arg) {
+  const [inst, setInst] = useState(null)
   const ref = useCallback(node => {
-    if (node) {
-      el.current = node
-      setObj(new clazz(node, args))
-    }
+    if (node) setInst(new clazz(node, arg))
   // this is a constructor
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  return [ref, obj]
+  return [ref, inst]
 }
 
 export {
