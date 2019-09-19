@@ -1,0 +1,1192 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var React = require('react');
+var React__default = _interopDefault(React);
+var MarkerClusterer = _interopDefault(require('@google/markerclustererplus'));
+var reactDom = require('react-dom');
+
+function useSetOptions(mapObj, opts) {
+  React.useEffect(function () {
+    mapObj.setOptions(opts);
+  }, [mapObj, opts]);
+}
+
+function SetOptions(_ref) {
+  var obj = _ref.obj,
+      opts = _ref.opts;
+
+  useSetOptions(obj, opts);
+  return null;
+}
+
+function SetOption(_ref2) {
+  var obj = _ref2.obj,
+      func = _ref2.func,
+      args = _ref2.args;
+
+  React.useEffect(function () {
+    obj[func](args);
+  }, [obj, func, args]);
+  return null;
+}
+
+function useMapListener(mapObj, func, event) {
+  React.useEffect(function () {
+    // function that passes back all event and the mapObj itself
+    var enhancedFunc = function enhancedFunc() {
+      for (var _len = arguments.length, e = Array(_len), _key = 0; _key < _len; _key++) {
+        e[_key] = arguments[_key];
+      }
+
+      return func.apply(undefined, e.concat([mapObj]));
+    };
+    var listener = mapObj.addListener(event, enhancedFunc);
+    return function () {
+      return window.google.maps.event.removeListener(listener);
+    };
+  }, [mapObj, func, event]);
+}
+
+function AddMapListener(_ref3) {
+  var obj = _ref3.obj,
+      func = _ref3.func,
+      event = _ref3.event;
+
+  useMapListener(obj, func, event);
+  return null;
+}
+
+var googleMapEvents = {
+  onBoundsChanged: 'bounds_changed',
+  onCenterChanged: 'center_changed',
+  onClick: 'click',
+  onDblClick: 'dblclick',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onDragStart: 'dragstart',
+  onHeadingChanged: 'heading_changed',
+  onIdle: 'idle',
+  onMapTypeIdChanged: 'maptypeid_changed',
+  onMouseMove: 'mousemove',
+  onMouseOut: 'mouseout',
+  onMouseOver: 'mouseover',
+  onProjectionChanged: 'projection_changed',
+  onRightClick: 'rightclick',
+  onTilesLoaded: 'tilesloaded',
+  onTiltChanged: 'tilt_changed',
+  onZoomChanged: 'zoom_changed'
+};
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+var objectWithoutProperties = function (obj, keys) {
+  var target = {};
+
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+
+  return target;
+};
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
+/**
+ * Creates a class instance that needs
+ * a dom reference to instantiate the class
+ * Returns an array of two values:
+ * 1. Function - takes a dom ref
+ * 2. classInstance - null on initial render
+ * @param {Class} clazz
+ * @param {Object} arg
+ * @returns {Array} [refCallback, classInstance]
+ */
+function useNodeRefConstructor(clazz, arg) {
+  var _useState = React.useState(null),
+      _useState2 = slicedToArray(_useState, 2),
+      inst = _useState2[0],
+      setInst = _useState2[1];
+
+  var ref = React.useCallback(function (node) {
+    if (node) setInst(new clazz(node, arg));
+    // this is a constructor
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return [ref, inst];
+}
+
+/**
+ * GoogleMap
+ * https://developers.google.com/maps/documentation/javascript/reference/map
+ */
+function GoogleMap(_ref) {
+  var bounds = _ref.bounds,
+      center = _ref.center,
+      children = _ref.children,
+      options = _ref.options,
+      containerProps = _ref.containerProps,
+      events = objectWithoutProperties(_ref, ['bounds', 'center', 'children', 'options', 'containerProps']);
+
+  var initialZoom = React.useRef(options.zoom);
+  var initialCenter = React.useRef(options.center);
+
+  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.Map, { zoom: initialZoom.current,
+    center: initialCenter.current
+  }),
+      _useNodeRefConstructo2 = slicedToArray(_useNodeRefConstructo, 2),
+      mapRef = _useNodeRefConstructo2[0],
+      map = _useNodeRefConstructo2[1];
+
+  return React__default.createElement(
+    React.Fragment,
+    null,
+    React__default.createElement('div', _extends({ ref: mapRef }, containerProps)),
+    map ? React__default.createElement(
+      React.Fragment,
+      null,
+      React__default.createElement(
+        MapContext.Provider,
+        { value: map },
+        children
+      ),
+      React__default.createElement(SetOptions, { obj: map, opts: options }),
+      React__default.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
+      '  />',
+      Object.keys(events).map(function (funcName) {
+        return React__default.createElement(AddMapListener, { key: funcName,
+          obj: map,
+          func: events[funcName],
+          event: googleMapEvents[funcName]
+        });
+      })
+    ) : null
+  );
+}
+/**
+ * Google Map Context for sharing the map instance
+ */
+var MapContext = React.createContext();
+function useMap() {
+  return React.useContext(MapContext);
+}
+
+/**
+ * I can't remember what lead me to use this pattern,
+ * but just using useCallback doesn't work
+ */
+function useCallbackRef(func) {
+  var ref = React.useRef(null);
+  if (ref.current === null) {
+    ref.current = func();
+  }
+  return ref.current;
+}
+
+function BicyclingLayer() {
+  var map = useMap();
+  var bicyclingLayer = useCallbackRef(function () {
+    return new window.google.maps.BicyclingLayer();
+  });
+  React.useEffect(function () {
+    bicyclingLayer.setMap(map);
+    return function () {
+      return bicyclingLayer.setMap(null);
+    };
+  }, [map, bicyclingLayer]);
+  return null;
+}
+
+/**
+ * useScript(someUrl, window.google && window.google.maps)
+ * @param {string} url of the script
+ * @param {boolean} a window object to determine whether 
+ * the script needs to be loaded
+ * @returns {boolean} returns a stateful value of whether
+ * the status of the script loading
+ */
+function useScript(url, alreadyLoaded) {
+  var _useState = React.useState(alreadyLoaded),
+      _useState2 = slicedToArray(_useState, 2),
+      isLoaded = _useState2[0],
+      setIsLoaded = _useState2[1];
+
+  React.useEffect(function () {
+    // only mount script if passed in val doesn't exist
+    if (!isLoaded) {
+      var script = document.createElement('script');
+
+      script.src = url;
+      script.async = true;
+      script.onload = function () {
+        return setIsLoaded(true);
+      };
+      // add script to page
+      document.head.appendChild(script);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
+
+  return isLoaded;
+}
+
+function LoadMap(_ref) {
+  var url = _ref.url,
+      _ref$loadingElement = _ref.loadingElement,
+      loadingElement = _ref$loadingElement === undefined ? null : _ref$loadingElement,
+      rest = objectWithoutProperties(_ref, ['url', 'loadingElement']);
+
+  var isLoaded = useScript(url, !!(window.google && window.google.maps));
+  console.log(isLoaded);
+  return isLoaded ? React__default.createElement(GoogleMap, rest) : loadingElement;
+}
+
+function TrafficLayer(_ref) {
+  var options = _ref.options;
+
+  var map = useMap();
+  var trafficLayer = useCallbackRef(function () {
+    return new window.google.maps.TrafficLayer();
+  });
+  useSetOptions(trafficLayer, options);
+  React.useEffect(function () {
+    trafficLayer.setMap(map);
+    return function () {
+      return trafficLayer.setMap(null);
+    };
+  }, [map, trafficLayer]);
+  return null;
+}
+
+function TransitLayer() {
+  var map = useMap();
+  var transitLayer = useCallbackRef(function () {
+    return new window.google.maps.TransitLayer();
+  });
+  React.useEffect(function () {
+    transitLayer.setMap(map);
+    return function () {
+      return transitLayer.setMap(null);
+    };
+  }, [map, transitLayer]);
+  return null;
+}
+
+function useSetClusterer(clusterer, val, setter) {
+  React.useEffect(function () {
+    if (val) clusterer[setter](val);
+  }, [clusterer, val, setter]);
+}
+
+var clustererEvents = {
+  onClick: 'click',
+  onClusteringBegin: 'clusteringbegin',
+  onClusteringEnd: 'clusteringend',
+  onMouseOver: 'mouseover',
+  onMouseOut: 'mouseout'
+};
+
+/**
+ * Clusterer Context for sharing the clusterer instance
+ */
+var ClustererContext = React.createContext();
+function useClusterer() {
+  return React.useContext(ClustererContext);
+}
+/**
+ * Clusterer
+ * https://github.com/googlemaps/v3-utility-library/tree/master/markerclustererplus
+ */
+function Clusterer(_ref) {
+  var children = _ref.children,
+      averageCenter = _ref.averageCenter,
+      batchSizeIE = _ref.batchSizeIE,
+      calculator = _ref.calculator,
+      clusterClass = _ref.clusterClass,
+      enableRetinaIcons = _ref.enableRetinaIcons,
+      gridSize = _ref.gridSize,
+      ignoreHidden = _ref.ignoreHidden,
+      imageExtension = _ref.imageExtension,
+      imagePath = _ref.imagePath,
+      imageSizes = _ref.imageSizes,
+      maxZoom = _ref.maxZoom,
+      minimumClusterSize = _ref.minimumClusterSize,
+      styles = _ref.styles,
+      title = _ref.title,
+      zoomOnClick = _ref.zoomOnClick,
+      events = objectWithoutProperties(_ref, ['children', 'averageCenter', 'batchSizeIE', 'calculator', 'clusterClass', 'enableRetinaIcons', 'gridSize', 'ignoreHidden', 'imageExtension', 'imagePath', 'imageSizes', 'maxZoom', 'minimumClusterSize', 'styles', 'title', 'zoomOnClick']);
+
+  var map = useMap();
+
+  // create the clusterer
+  var clusterer = useCallbackRef(function () {
+    return new MarkerClusterer(map, []);
+  });
+
+  // SET PROPERTIES
+  useSetClusterer(clusterer, styles, 'setStyles');
+  useSetClusterer(clusterer, batchSizeIE, 'setBatchSizeIE');
+  useSetClusterer(clusterer, averageCenter, 'setAverageCenter');
+  useSetClusterer(clusterer, calculator, 'setCalculator');
+  useSetClusterer(clusterer, clusterClass, 'setClusterClass');
+  useSetClusterer(clusterer, enableRetinaIcons, 'setEnableRetinaIcons');
+  useSetClusterer(clusterer, gridSize, 'setGridSize');
+  useSetClusterer(clusterer, ignoreHidden, 'setIgnoreHidden');
+  useSetClusterer(clusterer, imageExtension, 'setImageExtension');
+  useSetClusterer(clusterer, imagePath, 'setImagePath');
+  useSetClusterer(clusterer, imageSizes, 'setImageSizes');
+  useSetClusterer(clusterer, maxZoom, 'setMaxZoom');
+  useSetClusterer(clusterer, minimumClusterSize, 'setMinimumClusterSize');
+  useSetClusterer(clusterer, styles, 'setStyles');
+  useSetClusterer(clusterer, title, 'setTitle');
+  useSetClusterer(clusterer, zoomOnClick, 'setZoomOnClick');
+
+  // handles unmounting
+  React.useEffect(function () {
+    return function () {
+      return clusterer.setMap(null);
+    };
+  }, [clusterer]);
+  return React__default.createElement(
+    ClustererContext.Provider,
+    { value: clusterer },
+    children,
+    Object.keys(events).map(function (funcName) {
+      return React__default.createElement(AddMapListener, { key: funcName,
+        obj: clusterer,
+        func: events[funcName],
+        event: clustererEvents[funcName]
+      });
+    })
+  );
+}
+
+var markerEvents = {
+  onAnimationChanged: 'animation_changed',
+  onClick: 'click',
+  onClickableChanged: 'clickable_changed',
+  onCursorChanged: 'cursor_changed',
+  onDblClick: 'dblclick',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onDraggableChanged: 'draggable_changed',
+  onDragStart: 'dragstart',
+  onFlatChanged: 'flat_changed',
+  onIconChanged: 'icon_changed',
+  onMouseDown: 'mousedown',
+  onMouseOut: 'mouseout',
+  onMouseOver: 'mouseover',
+  onMouseUp: 'mouseup',
+  onPositionChanged: 'position_changed',
+  onRightClick: 'rightclick',
+  onShapeChanged: 'shape_changed',
+  onTitleChanged: 'title_changed',
+  onVisibleChanged: 'visible_changed',
+  onZIndexChanged: 'zindex_changed'
+};
+
+/**
+ * Marker
+ * https://developers.google.com/maps/documentation/javascript/reference/marker
+ */
+function Marker(_ref) {
+  var center = _ref.center,
+      children = _ref.children,
+      options = _ref.options,
+      noRedraw = _ref.noRedraw,
+      events = objectWithoutProperties(_ref, ['center', 'children', 'options', 'noRedraw']);
+
+
+  var map = useMap();
+  var clusterer = useClusterer();
+
+  // MARKER
+  var marker = useCallbackRef(function () {
+    return new window.google.maps.Marker();
+  });
+
+  // MARKER OPTIONS
+  useSetOptions(marker, options);
+
+  // CENTER
+  React.useEffect(function () {
+    marker.setPosition(center);
+  }, [marker, center]);
+
+  /**
+  * MOUNTING / UNMOUNTING
+  */
+  React.useEffect(function () {
+    if (clusterer) {
+      clusterer.addMarker(marker, noRedraw);
+      return function () {
+        clusterer.removeMarker(noRedraw);
+        marker.setMap(null);
+      };
+    } else {
+      marker.setMap(map);
+      return function () {
+        marker.setMap(null);
+      };
+    }
+  }, [map, marker, clusterer, noRedraw]);
+
+  return React__default.createElement(
+    MarkerContext.Provider,
+    { value: marker },
+    React__default.createElement(
+      React__default.Fragment,
+      null,
+      children,
+      Object.keys(events).map(function (funcName) {
+        return React__default.createElement(AddMapListener, { key: funcName,
+          obj: marker,
+          func: events[funcName],
+          event: markerEvents[funcName]
+        });
+      })
+    )
+  );
+}
+
+/**
+ * Marker Context for sharing the marker instance
+ */
+var MarkerContext = React.createContext();
+function useMarker() {
+  return React.useContext(MarkerContext);
+}
+
+var circleEvents = {
+  onCenterChanged: 'bounds_changed',
+  onClick: 'click',
+  onDblClick: 'dblclick',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onDragStart: 'dragstart',
+  onMouseDown: 'mousedown',
+  onMouseMove: 'mousemove',
+  onMouseOut: 'mouseout',
+  onMouseOver: 'mouseover',
+  onMouseUp: 'mouseup',
+  onRadiusChagned: 'radius_changed',
+  onRightClick: 'rightclick'
+};
+
+/**
+ * Circle
+ * https://developers.google.com/maps/documentation/javascript/reference/polygon#Circle
+ */
+function Circle(_ref) {
+  var center = _ref.center,
+      options = _ref.options,
+      events = objectWithoutProperties(_ref, ['center', 'options']);
+
+  var map = useMap();
+  var marker = useMarker();
+
+  // circle reference
+  var circle = useCallbackRef(function () {
+    return new window.google.maps.Circle();
+  });
+
+  // set circle options
+  useSetOptions(circle, options);
+
+  // set location, if marker context, anchor, else use center
+  React.useEffect(function () {
+    if (marker) {
+      circle.bindTo('center', marker, 'position');
+      circle.bindTo('map', marker, 'map');
+    } else {
+      circle.setCenter(center);
+    }
+  }, [circle, marker, center]);
+
+  // handles mounting/unmounting
+  React.useEffect(function () {
+
+    if (marker) {
+      // add to map if child of marker and marker is on map
+      // this means circle isn't on map if marker is clustererd
+      if (marker.getMap()) {
+        circle.setMap();
+      }
+    } else {
+      circle.setMap();
+    }
+
+    return function () {
+      return circle.setMap(null);
+    };
+  }, [map, circle, marker]);
+
+  return Object.keys(events).map(function (funcName) {
+    return React__default.createElement(AddMapListener, { key: funcName,
+      obj: circle,
+      func: events[funcName],
+      event: circleEvents[funcName]
+    });
+  });
+}
+
+var drawingManagerEvents = {
+  onCircleComplete: 'circlecomplete',
+  onMarkerComplete: 'markercomplete',
+  onOverlayComplete: 'overlaycomplete',
+  onPolygonComplete: 'polygoncomplete',
+  onPolyLineComplete: 'polylinecomplete',
+  onRectangleComplete: 'rectanglecomplete'
+};
+
+/**
+ * DrawingManager
+ * https://developers.google.com/maps/documentation/javascript/reference/drawing#DrawingManager
+ */
+function DrawingManager(_ref) {
+  var options = _ref.options,
+      events = objectWithoutProperties(_ref, ['options']);
+
+
+  var map = useMap();
+
+  // drawingManager reference
+  var drawingManager = useCallbackRef(function () {
+    return new window.google.maps.drawing.DrawingManager();
+  });
+
+  // set drawing manager options
+  useSetOptions(drawingManager, options);
+
+  // handle drawing manager mounting/unmounting
+  React.useEffect(function () {
+    drawingManager.setMap(map);
+    return function () {
+      return drawingManager.setMap(null);
+    };
+  }, [map, drawingManager]);
+
+  return Object.keys(events).map(function (funcName) {
+    return React__default.createElement(AddMapListener, { key: funcName,
+      obj: drawingManager,
+      func: events[funcName],
+      event: drawingManagerEvents[funcName]
+    });
+  });
+}
+
+var infoWindowEvents = {
+  onCloseClick: 'closeclick',
+  onContentChanged: 'content_changed',
+  onDomReady: 'domready',
+  onPositionChanged: 'position_changed',
+  onZIndexChanged: 'zindex_changed'
+};
+
+/**
+ * InfoWindow
+ * https://developers.google.com/maps/documentation/javascript/reference/info-window
+ */
+function InfoWindow(_ref) {
+  var center = _ref.center,
+      children = _ref.children,
+      anchor = _ref.anchor,
+      options = _ref.options,
+      events = objectWithoutProperties(_ref, ['center', 'children', 'anchor', 'options']);
+
+
+  var map = useMap();
+  var marker = useMarker();
+
+  var infoWindow = useCallbackRef(function () {
+    return new window.google.maps.InfoWindow();
+  });
+
+  var div = useCallbackRef(function () {
+    return document.createElement('div');
+  });
+
+  // handle info window options
+  useSetOptions(infoWindow, options);
+
+  // handle info window position, when no anchor
+  React.useEffect(function () {
+    if (center) {
+      infoWindow.setPosition(center);
+    }
+  }, [infoWindow, center]);
+
+  // handle info window content
+  React.useEffect(function () {
+    infoWindow.setContent(div);
+  }, [infoWindow, div]);
+
+  // handle info window mounting/unmounting
+  React.useEffect(function () {
+    // InfoWindow is a child of a Marker
+    if (marker) {
+      infoWindow.open(map, marker);
+      // InfoWindow was passed a google map anchor obj
+    } else if (anchor) {
+      infoWindow.open(map, anchor);
+      // InfoWindow is passed center; positioning is handled above
+    } else {
+      infoWindow.open(map);
+    }
+    return function () {
+      return infoWindow.setMap(null);
+    };
+  }, [map, marker, anchor, infoWindow, children]);
+
+  // TODO not sure if I need to use Children.only here
+  return reactDom.createPortal(React.Children.only(React__default.createElement(
+    React__default.Fragment,
+    null,
+    children,
+    Object.keys(events).map(function (funcName) {
+      return React__default.createElement(AddMapListener, { key: funcName,
+        obj: infoWindow,
+        func: events[funcName],
+        event: infoWindowEvents[funcName]
+      });
+    })
+  )), div);
+}
+
+/**
+ * Hook that creates a CustomerOverlay component
+ * with the prototype of google maps OverlayView
+ * returns an array of [instance, class]
+ */
+function useCustomOverlay() {
+  var map = useMap();
+  var CustomOverlay = React.useMemo(function () {
+    function CustomOverlay(map) {
+      var _this = this;
+
+      this.setMap(map);
+      this.remove = function () {
+        return _this.setMap(null);
+      };
+    }
+    CustomOverlay.prototype = new window.google.maps.OverlayView();
+    return CustomOverlay;
+  }, []);
+
+  var customOverlay = useCallbackRef(function () {
+    return new CustomOverlay(map);
+  });
+
+  return [customOverlay, CustomOverlay];
+}
+
+var PANES = {
+  FLOAT_PANE: 'floatPane',
+  MAP_PANE: 'mapPane',
+  MARKER_LAYER: 'markerLayer',
+  OVERLAY_LAYER: 'overlayLayer',
+  OVERLAY_MOUSE_TARGET: 'overlayMouseTarget'
+};
+
+var FLOAT_PANE = PANES.FLOAT_PANE,
+    MAP_PANE = PANES.MAP_PANE,
+    MARKER_LAYER = PANES.MARKER_LAYER,
+    OVERLAY_LAYER = PANES.OVERLAY_LAYER,
+    OVERLAY_MOUSE_TARGET = PANES.OVERLAY_MOUSE_TARGET;
+/**
+ * OverlayView
+ * https://developers.google.com/maps/documentation/javascript/reference/overlay-view#OverlayView
+ */
+
+function OverlayView(_ref) {
+  var center = _ref.center,
+      children = _ref.children,
+      className = _ref.className,
+      _ref$pane = _ref.pane,
+      pane = _ref$pane === undefined ? FLOAT_PANE : _ref$pane,
+      style = _ref.style;
+
+  // [overlay instance, overlay function]
+  var _useCustomOverlay = useCustomOverlay(),
+      _useCustomOverlay2 = slicedToArray(_useCustomOverlay, 2),
+      customOverlay = _useCustomOverlay2[0],
+      CustomOverlay = _useCustomOverlay2[1];
+
+  var div = useCallbackRef(function () {
+    return document.createElement('div');
+  });
+
+  React.useMemo(function () {
+    CustomOverlay.prototype.onAdd = function (e) {
+      customOverlay.getPanes()[pane].appendChild(div);
+    };
+  }, [div, pane, customOverlay, CustomOverlay]);
+
+  React.useMemo(function () {
+    CustomOverlay.prototype.draw = function () {
+      var projection = customOverlay.getProjection();
+
+      var _projection$fromLatLn = projection.fromLatLngToDivPixel(new window.google.maps.LatLng(center)),
+          x = _projection$fromLatLn.x,
+          y = _projection$fromLatLn.y;
+
+      if (style) {
+        // haven't tested yet
+        var strStyles = Object.entries(style).reduce(function (str, _ref2) {
+          var _ref3 = slicedToArray(_ref2, 2),
+              key = _ref3[0],
+              val = _ref3[1];
+
+          return '' + str + key + ':' + val + ';';
+        }, '');
+        div.style.setAttribute(strStyles);
+      }
+      div.className = className;
+      div.style.position = 'absolute';
+      div.style.left = x + 'px';
+      div.style.top = y + 'px';
+    };
+  }, [div, customOverlay, CustomOverlay, center, className, style]);
+
+  // handle unmounting
+  React.useMemo(function () {
+    CustomOverlay.prototype.onRemove = React.memo(function () {
+      div.parentNode.removeChild(div);
+    });
+    return function () {
+      return customOverlay.remove();
+    };
+  }, [div, customOverlay, CustomOverlay]);
+
+  return reactDom.createPortal(children, div);
+}
+
+OverlayView.floatPane = FLOAT_PANE;
+OverlayView.mapPane = MAP_PANE;
+OverlayView.markerLayer = MARKER_LAYER;
+OverlayView.overlayLayer = OVERLAY_LAYER;
+OverlayView.overlayMouseTarget = OVERLAY_MOUSE_TARGET;
+
+var polygonEvents = {
+  onClick: 'click',
+  onDblClick: 'dblclick',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onDragStart: 'dragstart',
+  onMouseDown: 'mousedown',
+  onMouseMove: 'mousemove',
+  onMouseOut: 'mouseout',
+  onMouseOver: 'mouseover',
+  onMouseUp: 'mouseup',
+  onRightclick: 'rightclick'
+};
+
+/**
+ * Polygon
+ * https://developers.google.com/maps/documentation/javascript/reference/polygon#Polygon
+ */
+function Polygon(_ref) {
+  var options = _ref.options,
+      events = objectWithoutProperties(_ref, ['options']);
+
+
+  var map = useMap();
+
+  var polygon = useCallbackRef(function () {
+    return new window.google.maps.Polygon();
+  });
+
+  // handle polygon options
+  useSetOptions(polygon, options);
+
+  // handle polygon mounting/unmounting
+  React.useEffect(function () {
+    polygon.setMap(map);
+    return function () {
+      return polygon.setMap(null);
+    };
+  }, [map, polygon]);
+
+  return Object.keys(events).map(function (funcName) {
+    return React__default.createElement(AddMapListener, { key: funcName,
+      obj: polygon,
+      func: events[funcName],
+      event: polygonEvents[funcName]
+    });
+  });
+}
+
+var polylineEvents = {
+  onClick: 'click',
+  onDblClick: 'dblclick',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onDragStart: 'dragstart',
+  onMouseDown: 'mousedown',
+  onMouseMove: 'mousemove',
+  onMouseOut: 'mouseout',
+  onMouseOver: 'mouseover',
+  onMouseUp: 'mouseup',
+  onRightclick: 'rightclick'
+};
+
+/**
+ * Polyline
+ * https://developers.google.com/maps/documentation/javascript/reference/polygon#Polyline
+ */
+function Polyline(_ref) {
+  var options = _ref.options,
+      events = objectWithoutProperties(_ref, ['options']);
+
+
+  var map = useMap();
+
+  var polyline = useCallbackRef(function () {
+    return new window.google.maps.Polyline();
+  });
+
+  // handle polyline options
+  useSetOptions(polyline, options);
+
+  // handle polyline mounting/unmounting
+  React.useEffect(function () {
+    polyline.setMap(map);
+    return function () {
+      return polyline.setMap(null);
+    };
+  }, [map, polyline]);
+
+  return Object.keys(events).map(function (funcName) {
+    return React__default.createElement(AddMapListener, { key: funcName,
+      obj: polyline,
+      func: events[funcName],
+      event: polylineEvents[funcName]
+    });
+  });
+}
+
+var rectangleEvents = {
+  onBoundsChanged: 'bounds_changed',
+  onClick: 'click',
+  onDblClick: 'dblclick',
+  onDrag: 'drag',
+  onDragEnd: 'dragend',
+  onDragStart: 'dragstart',
+  onMouseDown: 'mousedown',
+  onMouseMove: 'mousemove',
+  onMouseOut: 'mouseout',
+  onMouseOver: 'mouseover',
+  onMouseUp: 'mouseup',
+  onRightClick: 'rightclick'
+};
+
+/**
+ * Rectangle
+ * https://developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle
+ */
+function Rectangle(_ref) {
+  var options = _ref.options,
+      events = objectWithoutProperties(_ref, ['options']);
+
+
+  var map = useMap();
+
+  var rectangle = useCallbackRef(function () {
+    return new window.google.maps.Rectangle();
+  });
+
+  // handle rectangle options
+  useSetOptions(rectangle, options);
+
+  // handle rectangle mounting/unmounting
+  React.useEffect(function () {
+    rectangle.setMap(map);
+    return function () {
+      return rectangle.setMap(null);
+    };
+  }, [map, rectangle]);
+
+  return Object.keys(events).map(function (funcName) {
+    return React__default.createElement(AddMapListener, { key: funcName,
+      obj: rectangle,
+      func: events[funcName],
+      event: rectangleEvents[funcName]
+    });
+  });
+}
+
+function DirectionsRenderer(_ref) {
+  var options = _ref.options,
+      events = objectWithoutProperties(_ref, ['options']);
+
+
+  var map = useMap();
+
+  var directionsRenderer = useCallbackRef(function () {
+    return new window.google.maps.DirectionsRenderer();
+  });
+
+  // set options
+  useSetOptions(directionsRenderer, options);
+
+  React.useEffect(function () {
+    directionsRenderer.setMap(map);
+    return function () {
+      return directionsRenderer.setMap(null);
+    };
+  }, [map, directionsRenderer]);
+
+  return Object.keys(events).map(function (funcName) {
+    return React__default.createElement(AddMapListener, { key: funcName,
+      obj: directionsRenderer,
+      func: events[funcName],
+      event: polygonEvents[funcName]
+    });
+  });
+}
+
+function useDirectionsRequest() {
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  React.useEffect(function () {
+    var directionsService = new window.maps.DirectionsService();
+    directionsService.route.apply(directionsService, args);
+  }, [args]); // does this dependency work?
+}
+
+/**
+ * This component loads the google maps script and renders
+ * the map loader which uses objects from the script.
+ */
+function ScriptLoader(_ref) {
+  var url = _ref.url,
+      _ref$loadingElement = _ref.loadingElement,
+      loadingElement = _ref$loadingElement === undefined ? null : _ref$loadingElement,
+      isAlreadyLoaded = _ref.isAlreadyLoaded,
+      Element = _ref.Element,
+      rest = objectWithoutProperties(_ref, ['url', 'loadingElement', 'isAlreadyLoaded', 'Element']);
+
+  var isScriptLoaded = useScript(url, isAlreadyLoaded);
+  return isScriptLoaded ? React__default.createElement(Element, _extends({ loadingElement: loadingElement }, rest)) : loadingElement;
+}
+
+function AutoComplete(_ref) {
+  var options = _ref.options,
+      onPlaceChanged = _ref.onPlaceChanged,
+      rest = objectWithoutProperties(_ref, ['options', 'onPlaceChanged']);
+
+  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.places.Autocomplete),
+      _useNodeRefConstructo2 = slicedToArray(_useNodeRefConstructo, 2),
+      ref = _useNodeRefConstructo2[0],
+      autoComplete = _useNodeRefConstructo2[1];
+
+  return React__default.createElement(
+    React.Fragment,
+    null,
+    React__default.createElement('input', _extends({ ref: ref }, rest)),
+    autoComplete ? React__default.createElement(
+      React.Fragment,
+      null,
+      React__default.createElement(SetOptions, { obj: autoComplete, opts: options }),
+      React__default.createElement(AddMapListener, {
+        obj: autoComplete,
+        func: onPlaceChanged,
+        event: 'place_changed'
+      })
+    ) : null
+  );
+}
+
+function LoadAutoComplete(_ref) {
+  var url = _ref.url,
+      rest = objectWithoutProperties(_ref, ['url']);
+
+  var isAlreadyLoaded = React.useMemo(function () {
+    return !!(window.google && window.google.maps && window.google.maps.places);
+  }, []);
+  if (url) {
+    return React__default.createElement(ScriptLoader, _extends({}, rest, { url: url,
+      Element: AutoComplete,
+      isAlreadyLoaded: isAlreadyLoaded
+    }));
+  } else if (isAlreadyLoaded) {
+    return React__default.createElement(AutoComplete, rest);
+  }
+  return null;
+}
+
+function SearchBox(_ref) {
+  var options = _ref.options,
+      onPlaceChanged = _ref.onPlaceChanged,
+      rest = objectWithoutProperties(_ref, ['options', 'onPlaceChanged']);
+
+  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.places.SearchBox),
+      _useNodeRefConstructo2 = slicedToArray(_useNodeRefConstructo, 2),
+      ref = _useNodeRefConstructo2[0],
+      searchBox = _useNodeRefConstructo2[1];
+
+  return React__default.createElement(
+    React.Fragment,
+    null,
+    React__default.createElement('input', _extends({ ref: ref }, rest)),
+    searchBox ? React__default.createElement(
+      React.Fragment,
+      null,
+      React__default.createElement(SetOptions, { obj: searchBox, opts: options }),
+      React__default.createElement(AddMapListener, {
+        obj: searchBox,
+        func: onPlaceChanged,
+        event: 'place_changed'
+      })
+    ) : null
+  );
+}
+
+function LoadSearchBox(_ref) {
+  var url = _ref.url,
+      rest = objectWithoutProperties(_ref, ['url']);
+
+  var isAlreadyLoaded = React.useMemo(function () {
+    return !!(window.google && window.google.maps && window.google.maps.places);
+  }, []);
+  if (url) {
+    return React__default.createElement(ScriptLoader, _extends({}, rest, { url: url,
+      isAlreadyLoaded: isAlreadyLoaded,
+      Element: SearchBox
+    }));
+  } else if (isAlreadyLoaded) {
+    return React__default.createElement(SearchBox, rest);
+  }
+  return null;
+}
+
+function StreetViewPanorama(_ref) {
+  var options = _ref.options,
+      onCloseClick = _ref.onCloseClick,
+      onPanoramaChanged = _ref.onPanoramaChanged,
+      onPositionChanged = _ref.onPositionChanged,
+      onPovChanged = _ref.onPovChanged,
+      onResize = _ref.onResize,
+      onStatusChanged = _ref.onStatusChanged,
+      onVisibleChanged = _ref.onVisibleChanged,
+      onZoomChanged = _ref.onZoomChanged,
+      rest = objectWithoutProperties(_ref, ['options', 'onCloseClick', 'onPanoramaChanged', 'onPositionChanged', 'onPovChanged', 'onResize', 'onStatusChanged', 'onVisibleChanged', 'onZoomChanged']);
+
+  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.StreetViewPanorama),
+      _useNodeRefConstructo2 = slicedToArray(_useNodeRefConstructo, 2),
+      ref = _useNodeRefConstructo2[0],
+      streetViewPanorama = _useNodeRefConstructo2[1];
+
+  return React__default.createElement(
+    'div',
+    _extends({ ref: ref }, rest),
+    streetViewPanorama ? React__default.createElement(
+      React.Fragment,
+      null,
+      React__default.createElement(SetOptions, { obj: streetViewPanorama, opts: options }),
+      React__default.createElement(AddMapListener, { obj: streetViewPanorama, func: onCloseClick, event: 'closeclick' }),
+      React__default.createElement(AddMapListener, { obj: onPanoramaChanged, func: onCloseClick, event: 'pano_changed' }),
+      React__default.createElement(AddMapListener, { obj: onPositionChanged, func: onCloseClick, event: 'position_changed' }),
+      React__default.createElement(AddMapListener, { obj: onPovChanged, func: onCloseClick, event: 'pov_changed' }),
+      React__default.createElement(AddMapListener, { obj: onResize, func: onCloseClick, event: 'resive' }),
+      React__default.createElement(AddMapListener, { obj: onStatusChanged, func: onCloseClick, event: 'status_changed' }),
+      React__default.createElement(AddMapListener, { obj: onVisibleChanged, func: onCloseClick, event: 'visible_changed' }),
+      React__default.createElement(AddMapListener, { obj: onZoomChanged, func: onCloseClick, event: 'zoom_changed' })
+    ) : null
+  );
+}
+
+// shouldn't be in the library
+
+function getLatLng(latLngObj) {
+  var lat = latLngObj.lat();
+  var lng = latLngObj.lng();
+  return { lat: lat, lng: lng };
+}
+
+function getPolygonCenter(polygon) {
+  var bounds = new window.google.maps.LatLngBounds();
+  polygon.getPath().forEach(function (latLng) {
+    return bounds.extend(latLng);
+  });
+  return getLatLng(bounds.getCenter());
+}
+
+// maps
+
+exports.getLatLng = getLatLng;
+exports.getPolygonCenter = getPolygonCenter;
+exports.BicyclingLayer = BicyclingLayer;
+exports.GoogleMap = LoadMap;
+exports.TrafficLayer = TrafficLayer;
+exports.TransitLayer = TransitLayer;
+exports.Circle = Circle;
+exports.DrawingManager = DrawingManager;
+exports.InfoWindow = InfoWindow;
+exports.Marker = Marker;
+exports.OverlayView = OverlayView;
+exports.Polygon = Polygon;
+exports.Polyline = Polyline;
+exports.Rectangle = Rectangle;
+exports.AutoComplete = LoadAutoComplete;
+exports.SearchBox = LoadSearchBox;
+exports.DirectionsRenderer = DirectionsRenderer;
+exports.useDirectionsRequest = useDirectionsRequest;
+exports.StreetViewPanorama = StreetViewPanorama;
+exports.Clusterer = Clusterer;
+//# sourceMappingURL=index.js.map
