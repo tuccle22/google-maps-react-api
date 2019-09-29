@@ -1160,7 +1160,5 @@ function getPolygonCenter(polygon) {
   return getLatLng(bounds.getCenter());
 }
 
-// maps
-
-export { getLatLng, getPolygonCenter, BicyclingLayer, LoadMap as GoogleMap, TrafficLayer, TransitLayer, Circle, DrawingManager, InfoWindow, Marker, OverlayView, Polygon, Polyline, Rectangle, LoadAutoComplete as AutoComplete, LoadSearchBox as SearchBox, DirectionsRenderer, useDirectionsRequest, StreetViewPanorama, Clusterer };
+export { BicyclingLayer, LoadMap as GoogleMap, TrafficLayer, TransitLayer, Circle, DrawingManager, InfoWindow, Marker, OverlayView, Polygon, Polyline, Rectangle, DirectionsRenderer, useDirectionsRequest, LoadAutoComplete as AutoComplete, LoadSearchBox as SearchBox, StreetViewPanorama, Clusterer, getLatLng, getPolygonCenter };
 //# sourceMappingURL=index.es.js.map

@@ -1167,10 +1167,6 @@ function getPolygonCenter(polygon) {
   return getLatLng(bounds.getCenter());
 }
 
-// maps
-
-exports.getLatLng = getLatLng;
-exports.getPolygonCenter = getPolygonCenter;
 exports.BicyclingLayer = BicyclingLayer;
 exports.GoogleMap = LoadMap;
 exports.TrafficLayer = TrafficLayer;
@@ -1183,10 +1179,12 @@ exports.OverlayView = OverlayView;
 exports.Polygon = Polygon;
 exports.Polyline = Polyline;
 exports.Rectangle = Rectangle;
-exports.AutoComplete = LoadAutoComplete;
-exports.SearchBox = LoadSearchBox;
 exports.DirectionsRenderer = DirectionsRenderer;
 exports.useDirectionsRequest = useDirectionsRequest;
+exports.AutoComplete = LoadAutoComplete;
+exports.SearchBox = LoadSearchBox;
 exports.StreetViewPanorama = StreetViewPanorama;
 exports.Clusterer = Clusterer;
+exports.getLatLng = getLatLng;
+exports.getPolygonCenter = getPolygonCenter;
 //# sourceMappingURL=index.js.map

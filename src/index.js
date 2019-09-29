@@ -1,58 +1,19 @@
-// maps
-import BicyclingLayer from './components/maps/BicyclingLayer/BicyclingLayer'
-import GoogleMap from './components/maps/GoogleMap/helper/LoadMap'
-import TrafficLayer from './components/maps/TrafficLayer/TrafficLayer'
-import TransitLayer from './components/maps/TransitLayer/TransitLayer'
-// drawing
-import Circle from './components/drawing/Circle/Circle'
-import DrawingManager from './components/drawing/DrawingManager/DrawingManager'
-import InfoWindow from './components/drawing/InfoWindow/InfoWindow'
-import Marker from './components/drawing/Marker/Marker'
-import OverlayView from './components/drawing/OverlayView/OverlayView'
-import Polygon from './components/drawing/Polygon/Polygon'
-import Polyline from './components/drawing/Polyline/Polyline'
-import Rectangle from './components/drawing/Rectangle/Rectangle'
-// routes
-import DirectionsRenderer from './components/routes/DirectionsRenderer/DirectionsRenderer'
-import useDirectionsRequest from './components/routes/DirectionsRenderer/useDirectionsRequest'
-// places
-// import AutoComplete from './components/places/AutoComplete/AutoComplete'
-import AutoComplete from './components/places/AutoComplete/LoadAutoComplete'
-import SearchBox from './components/places/SearchBox/LoadSearchBox'
-// street view
-import StreetViewPanorama from './components/street_view/StreetViewPanamora/StreetViewPanorama'
-// addons
-import Clusterer from './components/addons/Clusterer/Clusterer'
-
-// TODO: remove these
-import { getLatLng, getPolygonCenter } from './helpers/utils/map_utils'
-
-export {
-  // helpers
-  getLatLng,
-  getPolygonCenter,
-  // maps
-  BicyclingLayer,
-  GoogleMap,
-  TrafficLayer,
-  TransitLayer,
-  // drawing
-  Circle,
-  DrawingManager,
-  InfoWindow,
-  Marker,
-  OverlayView,
-  Polygon,
-  Polyline,
-  Rectangle,
-  // places
-  AutoComplete,
-  SearchBox,
-  // routes
-  DirectionsRenderer,
-  useDirectionsRequest,
-  // street view
-  StreetViewPanorama,
-  // addons
-  Clusterer
-}
+export { default as BicyclingLayer        } from './components/maps/BicyclingLayer/BicyclingLayer'
+export { default as GoogleMap             } from './components/maps/GoogleMap/helper/LoadMap'
+export { default as TrafficLayer          } from './components/maps/TrafficLayer/TrafficLayer'
+export { default as TransitLayer          } from './components/maps/TransitLayer/TransitLayer'
+export { default as Circle                } from './components/drawing/Circle/Circle'
+export { default as DrawingManager        } from './components/drawing/DrawingManager/DrawingManager'
+export { default as InfoWindow            } from './components/drawing/InfoWindow/InfoWindow'
+export { default as Marker                } from './components/drawing/Marker/Marker'
+export { default as OverlayView           } from './components/drawing/OverlayView/OverlayView'
+export { default as Polygon               } from './components/drawing/Polygon/Polygon'
+export { default as Polyline              } from './components/drawing/Polyline/Polyline'
+export { default as Rectangle             } from './components/drawing/Rectangle/Rectangle'
+export { default as DirectionsRenderer    } from './components/routes/DirectionsRenderer/DirectionsRenderer'
+export { default as useDirectionsRequest  } from './components/routes/DirectionsRenderer/useDirectionsRequest'
+export { default as AutoComplete          } from './components/places/AutoComplete/LoadAutoComplete'
+export { default as SearchBox             } from './components/places/SearchBox/LoadSearchBox'
+export { default as StreetViewPanorama    } from './components/street_view/StreetViewPanamora/StreetViewPanorama'
+export { default as Clusterer             } from './components/addons/Clusterer/Clusterer'
+export { getLatLng, getPolygonCenter      } from './helpers/utils/map_utils'
