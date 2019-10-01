@@ -1,6 +1,6 @@
 {
   "name": "google-maps-react-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A declarative react api for google maps",
   "author": "tuccle22",
   "license": "MIT",

@@ -33,7 +33,7 @@ function GoogleMap({
               { children }
             </MapContext.Provider>
             <SetOptions obj={map} opts={options} />
-            <SetOption obj={map} func='panTo' args={center} />  /> 
+            <SetOption obj={map} func='panTo' args={center} />
             { Object.keys(events).map(funcName =>
               <AddMapListener key={funcName}
                 obj={map}

@@ -198,7 +198,6 @@ function GoogleMap(_ref) {
       ),
       React.createElement(SetOptions, { obj: map, opts: options }),
       React.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
-      '  />',
       Object.keys(events).map(function (funcName) {
         return React.createElement(AddMapListener, { key: funcName,
           obj: map,
