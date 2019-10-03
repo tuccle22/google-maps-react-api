@@ -472,7 +472,7 @@ function Marker(_ref) {
     if (clusterer) {
       clusterer.addMarker(marker, noRedraw);
       return function () {
-        clusterer.removeMarker(noRedraw);
+        clusterer.removeMarker(marker, noRedraw);
         marker.setMap(null);
       };
     } else {
