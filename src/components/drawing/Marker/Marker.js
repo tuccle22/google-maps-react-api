@@ -40,7 +40,7 @@ function Marker({
     if (clusterer) {
       clusterer.addMarker(marker, noRedraw)
       return () => {
-        clusterer.removeMarker(noRedraw)
+        clusterer.removeMarker(marker, noRedraw)
         marker.setMap(null)
       }
     } else {
