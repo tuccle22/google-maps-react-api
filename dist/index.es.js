@@ -555,10 +555,10 @@ function Circle(_ref) {
       // add to map if child of marker and marker is on map
       // this means circle isn't on map if marker is clustererd
       if (marker.getMap()) {
-        circle.setMap();
+        circle.setMap(map);
       }
     } else {
-      circle.setMap();
+      circle.setMap(map);
     }
 
     return function () {

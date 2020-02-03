@@ -7,9 +7,10 @@
   "dependencies": {
     "@google/markerclustererplus": "^2.1.11",
     "antd": "^3.21.2",
+    "babel-eslint": "^10.0.3",
     "google-maps-react-api": "link:..",
     "prop-types": "^15.6.2",
-    "react-scripts": "^3.0.1"
+    "react-scripts": "^3.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
