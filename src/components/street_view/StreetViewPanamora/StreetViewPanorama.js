@@ -1,5 +1,5 @@
 import React, { Fragment as _ } from 'react'
-import { SetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks';
+import { SetOptions, AddMapListener, useSetOptions, useMapListener } from '../../../helpers/hooks/map_hooks';
 import { useNodeRefConstructor } from '../../../helpers/hooks/use_node_ref_constructor';
 
 function StreetViewPanorama({

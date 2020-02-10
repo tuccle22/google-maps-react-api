@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref';
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks';
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks';
 import { polylineEvents } from './PolylineEvents';
 /**
  * Polyline
@@ -27,13 +27,8 @@ function Polyline({
     return () => polyline.setMap(null)
   }, [map, polyline])
 
-  return Object.keys(events).map(funcName =>
-    <AddMapListener key={funcName}
-      obj={polyline}
-      func={events[funcName]}
-      event={polylineEvents[funcName]}
-    />
-  )
+  useCreateMapListeners(polyline, events, polylineEvents)
+  return null
 }
 
 export default Polyline

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useMarker } from '../Marker/Marker'
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
 import { circleEvents } from './CircleEvents'
 /**
@@ -36,7 +36,6 @@ function Circle({
 
   // handles mounting/unmounting
   useEffect(() => {
-
     if (marker) {
       // add to map if child of marker and marker is on map
       // this means circle isn't on map if marker is clustererd
@@ -50,13 +49,8 @@ function Circle({
     return () => circle.setMap(null)
   }, [map, circle, marker])
 
-  return Object.keys(events).map(funcName =>
-    <AddMapListener key={funcName}
-      obj={circle}
-      func={events[funcName]}
-      event={circleEvents[funcName]}
-    />
-  )
+  useCreateMapListeners(circle, events, circleEvents)
+  return null
 }
 
 export default Circle

@@ -16,4 +16,5 @@ export { default as AutoComplete          } from './components/places/AutoComple
 export { default as SearchBox             } from './components/places/SearchBox/LoadSearchBox'
 export { default as StreetViewPanorama    } from './components/street_view/StreetViewPanamora/StreetViewPanorama'
 export { default as Clusterer             } from './components/addons/Clusterer/Clusterer'
+export { useMapEventListener              } from './components/maps/GoogleMap/GoogleMap'
 export { getLatLng, getPolygonCenter      } from './helpers/utils/map_utils'

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref';
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks';
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks';
 import { polygonEvents } from './PolygonEvents';
 
 /**
@@ -28,13 +28,8 @@ function Polygon({
     return () => polygon.setMap(null)
   }, [map, polygon])
 
-  return Object.keys(events).map(funcName =>
-    <AddMapListener key={funcName}
-      obj={polygon}
-      func={events[funcName]}
-      event={polygonEvents[funcName]}
-    />
-  )
+  useCreateMapListeners(polygon, events, polygonEvents)
+  return null
 }
 
 export default Polygon

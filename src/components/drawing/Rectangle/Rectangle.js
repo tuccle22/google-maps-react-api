@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref';
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks';
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks';
 import { rectangleEvents } from './RectangleEvents';
 /**
  * Rectangle
@@ -27,13 +27,8 @@ function Rectangle({
     return () => rectangle.setMap(null)
   }, [map, rectangle])
 
-  return Object.keys(events).map(funcName =>
-    <AddMapListener key={funcName}
-      obj={rectangle}
-      func={events[funcName]}
-      event={rectangleEvents[funcName]}
-    />
-  )
+  useCreateMapListeners(rectangle, events, rectangleEvents)
+  return null
 }
 
 export default Rectangle

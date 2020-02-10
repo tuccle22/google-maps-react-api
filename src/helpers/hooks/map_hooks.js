@@ -32,10 +32,33 @@ function AddMapListener({obj, func, event}) {
   return null
 }
 
+function useCreateMapListeners(mapObj, events, eventMapping) {
+  return Object.keys(events).map(funcName => {
+    function MapListener() {
+      useMapListener(mapObj, events[funcName], eventMapping[funcName])
+    }
+    return MapListener()
+  })
+}
+function useCreateMapListenersOnce(mapObj, eventsOnce, eventMapping) {
+  return Object.keys(eventsOnce).forEach(funcName => {
+    function MapListenerOnce() {
+      useEffect(() => {
+        const enhancedFunc = (...e) => eventsOnce[funcName](...e, mapObj)
+        mapObj.addListenerOnce(eventMapping[funcName], enhancedFunc)
+        // according to documentation this listener removes itself,
+        // but I wonder how it works if the listener never triggers
+      }, [])
+    }
+    return MapListenerOnce()
+  })
+}
+
 export {
   useSetOptions,
   SetOptions,
   SetOption,
   useMapListener,
-  AddMapListener
+  AddMapListener,
+  useCreateMapListeners,
 }

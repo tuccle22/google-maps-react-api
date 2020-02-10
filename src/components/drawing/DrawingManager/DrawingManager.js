@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks'
 import { drawingManagerEvents } from './DrawingManagerEvents'
 /**
  * DrawingManager
@@ -27,13 +27,8 @@ function DrawingManager({
     return () => drawingManager.setMap(null)
   }, [map, drawingManager])
 
-  return Object.keys(events).map(funcName =>
-    <AddMapListener key={funcName}
-      obj={drawingManager}
-      func={events[funcName]}
-      event={drawingManagerEvents[funcName]}
-    />
-  )
+  useCreateMapListeners(drawingManager, events, drawingManagerEvents)
+  return null
 }
 
 export default DrawingManager

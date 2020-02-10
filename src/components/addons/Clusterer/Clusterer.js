@@ -2,7 +2,7 @@ import React, { useEffect, createContext, useContext } from 'react'
 import MarkerClusterer from '@google/markerclustererplus'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
-import { AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useCreateMapListeners } from '../../../helpers/hooks/map_hooks'
 import { useSetClusterer } from './helpers'
 import { clustererEvents } from './ClustererEvents';
 /**
@@ -64,16 +64,10 @@ function Clusterer({
 
   // handles unmounting
   useEffect(() => () => clusterer.setMap(null), [clusterer])
+  useCreateMapListeners(clusterer, events, clustererEvents)
   return (
     <ClustererContext.Provider value={clusterer}>
       { children }
-      { Object.keys(events).map(funcName =>
-        <AddMapListener key={funcName}
-          obj={clusterer}
-          func={events[funcName]}
-          event={clustererEvents[funcName]}
-        />
-      )}
     </ClustererContext.Provider>
   )
 }

@@ -60,6 +60,15 @@ function AddMapListener(_ref3) {
   return null;
 }
 
+function useCreateMapListeners(mapObj, events, eventMapping) {
+  return Object.keys(events).map(function (funcName) {
+    function MapListener() {
+      useMapListener(mapObj, events[funcName], eventMapping[funcName]);
+    }
+    return MapListener();
+  });
+}
+
 var googleMapEvents = {
   onBoundsChanged: 'bounds_changed',
   onCenterChanged: 'center_changed',
@@ -191,6 +200,8 @@ function GoogleMap(_ref) {
       mapRef = _useNodeRefConstructo2[0],
       map = _useNodeRefConstructo2[1];
 
+  useCreateMapListeners(map, events, googleMapEvents);
+
   return React__default.createElement(
     React.Fragment,
     null,
@@ -204,14 +215,7 @@ function GoogleMap(_ref) {
         children
       ),
       React__default.createElement(SetOptions, { obj: map, opts: options }),
-      React__default.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
-      Object.keys(events).map(function (funcName) {
-        return React__default.createElement(AddMapListener, { key: funcName,
-          obj: map,
-          func: events[funcName],
-          event: googleMapEvents[funcName]
-        });
-      })
+      React__default.createElement(SetOption, { obj: map, func: 'panTo', args: center })
     ) : null
   );
 }
@@ -221,6 +225,12 @@ function GoogleMap(_ref) {
 var MapContext = React.createContext();
 function useMap() {
   return React.useContext(MapContext);
+}
+
+function useMapEventListener(event, func) {
+  var map = useMap();
+  if (!map) throw new Error('useMapEventListener is not used in a child component of GoogleMap');
+  return useMapListener(map, func, event);
 }
 
 /**
@@ -289,7 +299,6 @@ function LoadMap(_ref) {
       rest = objectWithoutProperties(_ref, ['url', 'loadingElement']);
 
   var isLoaded = useScript(url, !!(window.google && window.google.maps));
-  console.log(isLoaded);
   return isLoaded ? React__default.createElement(GoogleMap, rest) : loadingElement;
 }
 
@@ -399,17 +408,11 @@ function Clusterer(_ref) {
       return clusterer.setMap(null);
     };
   }, [clusterer]);
+  useCreateMapListeners(clusterer, events, clustererEvents);
   return React__default.createElement(
     ClustererContext.Provider,
     { value: clusterer },
-    children,
-    Object.keys(events).map(function (funcName) {
-      return React__default.createElement(AddMapListener, { key: funcName,
-        obj: clusterer,
-        func: events[funcName],
-        event: clustererEvents[funcName]
-      });
-    })
+    children
   );
 }
 
@@ -482,22 +485,11 @@ function Marker(_ref) {
       };
     }
   }, [map, marker, clusterer, noRedraw]);
-
+  useCreateMapListeners(marker, events, markerEvents);
   return React__default.createElement(
     MarkerContext.Provider,
     { value: marker },
-    React__default.createElement(
-      React__default.Fragment,
-      null,
-      children,
-      Object.keys(events).map(function (funcName) {
-        return React__default.createElement(AddMapListener, { key: funcName,
-          obj: marker,
-          func: events[funcName],
-          event: markerEvents[funcName]
-        });
-      })
-    )
+    children
   );
 }
 
@@ -557,7 +549,6 @@ function Circle(_ref) {
 
   // handles mounting/unmounting
   React.useEffect(function () {
-
     if (marker) {
       // add to map if child of marker and marker is on map
       // this means circle isn't on map if marker is clustererd
@@ -573,13 +564,8 @@ function Circle(_ref) {
     };
   }, [map, circle, marker]);
 
-  return Object.keys(events).map(function (funcName) {
-    return React__default.createElement(AddMapListener, { key: funcName,
-      obj: circle,
-      func: events[funcName],
-      event: circleEvents[funcName]
-    });
-  });
+  useCreateMapListeners(circle, events, circleEvents);
+  return null;
 }
 
 var drawingManagerEvents = {
@@ -618,13 +604,8 @@ function DrawingManager(_ref) {
     };
   }, [map, drawingManager]);
 
-  return Object.keys(events).map(function (funcName) {
-    return React__default.createElement(AddMapListener, { key: funcName,
-      obj: drawingManager,
-      func: events[funcName],
-      event: drawingManagerEvents[funcName]
-    });
-  });
+  useCreateMapListeners(drawingManager, events, drawingManagerEvents);
+  return null;
 }
 
 var infoWindowEvents = {
@@ -690,19 +671,9 @@ function InfoWindow(_ref) {
     };
   }, [map, marker, anchor, infoWindow, children]);
 
+  useCreateMapListeners(infoWindow, events, infoWindowEvents);
   // TODO not sure if I need to use Children.only here
-  return reactDom.createPortal(React.Children.only(React__default.createElement(
-    React__default.Fragment,
-    null,
-    children,
-    Object.keys(events).map(function (funcName) {
-      return React__default.createElement(AddMapListener, { key: funcName,
-        obj: infoWindow,
-        func: events[funcName],
-        event: infoWindowEvents[funcName]
-      });
-    })
-  )), div);
+  return reactDom.createPortal(React.Children.only(children), div);
 }
 
 /**
@@ -859,13 +830,8 @@ function Polygon(_ref) {
     };
   }, [map, polygon]);
 
-  return Object.keys(events).map(function (funcName) {
-    return React__default.createElement(AddMapListener, { key: funcName,
-      obj: polygon,
-      func: events[funcName],
-      event: polygonEvents[funcName]
-    });
-  });
+  useCreateMapListeners(polygon, events, polygonEvents);
+  return null;
 }
 
 var polylineEvents = {
@@ -908,13 +874,8 @@ function Polyline(_ref) {
     };
   }, [map, polyline]);
 
-  return Object.keys(events).map(function (funcName) {
-    return React__default.createElement(AddMapListener, { key: funcName,
-      obj: polyline,
-      func: events[funcName],
-      event: polylineEvents[funcName]
-    });
-  });
+  useCreateMapListeners(polyline, events, polylineEvents);
+  return null;
 }
 
 var rectangleEvents = {
@@ -958,14 +919,13 @@ function Rectangle(_ref) {
     };
   }, [map, rectangle]);
 
-  return Object.keys(events).map(function (funcName) {
-    return React__default.createElement(AddMapListener, { key: funcName,
-      obj: rectangle,
-      func: events[funcName],
-      event: rectangleEvents[funcName]
-    });
-  });
+  useCreateMapListeners(rectangle, events, rectangleEvents);
+  return null;
 }
+
+var directionsRendererEvents = {
+  onDirectionsChanged: 'directions_changed'
+};
 
 function DirectionsRenderer(_ref) {
   var options = _ref.options,
@@ -988,13 +948,8 @@ function DirectionsRenderer(_ref) {
     };
   }, [map, directionsRenderer]);
 
-  return Object.keys(events).map(function (funcName) {
-    return React__default.createElement(AddMapListener, { key: funcName,
-      obj: directionsRenderer,
-      func: events[funcName],
-      event: polygonEvents[funcName]
-    });
-  });
+  useCreateMapListeners(directionsRenderer, events, directionsRendererEvents);
+  return null;
 }
 
 function useDirectionsRequest() {
@@ -1024,6 +979,8 @@ function ScriptLoader(_ref) {
   return isScriptLoaded ? React__default.createElement(Element, _extends({ loadingElement: loadingElement }, rest)) : loadingElement;
 }
 
+var AUTO_COMPLETE_EVENT = 'place_changed';
+
 function AutoComplete(_ref) {
   var options = _ref.options,
       onPlaceChanged = _ref.onPlaceChanged,
@@ -1038,17 +995,20 @@ function AutoComplete(_ref) {
     React.Fragment,
     null,
     React__default.createElement('input', _extends({ ref: ref }, rest)),
-    autoComplete ? React__default.createElement(
-      React.Fragment,
-      null,
-      React__default.createElement(SetOptions, { obj: autoComplete, opts: options }),
-      React__default.createElement(AddMapListener, {
-        obj: autoComplete,
-        func: onPlaceChanged,
-        event: 'place_changed'
-      })
-    ) : null
+    autoComplete ? React__default.createElement(OnAutoComplete, {
+      options: options,
+      autoComplete: autoComplete,
+      onPlaceChanged: onPlaceChanged }) : null
   );
+}
+
+function OnAutoComplete(_ref2) {
+  var autoComplete = _ref2.autoComplete,
+      options = _ref2.options,
+      onPlaceChanged = _ref2.onPlaceChanged;
+
+  useSetOptions(autoComplete, options);
+  useMapListener(autoComplete, onPlaceChanged, AUTO_COMPLETE_EVENT);
 }
 
 function LoadAutoComplete(_ref) {
@@ -1069,6 +1029,8 @@ function LoadAutoComplete(_ref) {
   return null;
 }
 
+var SEARCH_BOX_EVENT = 'place_changed';
+
 function SearchBox(_ref) {
   var options = _ref.options,
       onPlaceChanged = _ref.onPlaceChanged,
@@ -1083,17 +1045,21 @@ function SearchBox(_ref) {
     React.Fragment,
     null,
     React__default.createElement('input', _extends({ ref: ref }, rest)),
-    searchBox ? React__default.createElement(
-      React.Fragment,
-      null,
-      React__default.createElement(SetOptions, { obj: searchBox, opts: options }),
-      React__default.createElement(AddMapListener, {
-        obj: searchBox,
-        func: onPlaceChanged,
-        event: 'place_changed'
-      })
-    ) : null
+    searchBox ? React__default.createElement(OnSearchBox, {
+      options: options,
+      searchBox: searchBox,
+      onPlaceChanged: onPlaceChanged
+    }) : null
   );
+}
+
+function OnSearchBox(_ref2) {
+  var searchBox = _ref2.searchBox,
+      options = _ref2.options,
+      onPlaceChanged = _ref2.onPlaceChanged;
+
+  useSetOptions(searchBox, options);
+  useMapListener(searchBox, onPlaceChanged, SEARCH_BOX_EVENT);
 }
 
 function LoadSearchBox(_ref) {
@@ -1184,6 +1150,7 @@ exports.AutoComplete = LoadAutoComplete;
 exports.SearchBox = LoadSearchBox;
 exports.StreetViewPanorama = StreetViewPanorama;
 exports.Clusterer = Clusterer;
+exports.useMapEventListener = useMapEventListener;
 exports.getLatLng = getLatLng;
 exports.getPolygonCenter = getPolygonCenter;
 //# sourceMappingURL=index.js.map

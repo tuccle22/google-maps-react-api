@@ -1,6 +1,8 @@
 import React, { Fragment as _ } from 'react'
 import { useNodeRefConstructor } from '../../../helpers/hooks/use_node_ref_constructor';
-import { SetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks';
+import { useSetOptions, useMapListener } from '../../../helpers/hooks/map_hooks';
+
+const SEARCH_BOX_EVENT = 'place_changed'
 
 function SearchBox({
   options,
@@ -13,18 +15,20 @@ function SearchBox({
   return (
     <_>
       <input ref={ref} {...rest} />
-      { searchBox ?
-        <_>
-          <SetOptions obj={searchBox} opts={options} />
-          <AddMapListener
-            obj={searchBox}
-            func={onPlaceChanged}
-            event='place_changed'
-          />
-        </_>
+      { searchBox ? 
+        <OnSearchBox 
+          options={options}  
+          searchBox={searchBox}
+          onPlaceChanged={onPlaceChanged}
+        />
       : null }
     </_>
   )
+}
+
+function OnSearchBox({searchBox, options, onPlaceChanged}) {
+  useSetOptions(searchBox, options)
+  useMapListener(searchBox, onPlaceChanged, SEARCH_BOX_EVENT)
 }
 
 export default SearchBox

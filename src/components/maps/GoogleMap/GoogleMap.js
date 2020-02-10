@@ -1,5 +1,5 @@
 import React, { Fragment as _, createContext, useContext, useRef } from 'react'
-import { AddMapListener, SetOptions, SetOption } from '../../../helpers/hooks/map_hooks'
+import { SetOptions, SetOption, useCreateMapListeners, useMapListener } from '../../../helpers/hooks/map_hooks'
 import { googleMapEvents } from './GoogleMapEvents';
 import { useNodeRefConstructor } from '../../../helpers/hooks/use_node_ref_constructor';
 /**
@@ -23,7 +23,9 @@ function GoogleMap({
       center: initialCenter.current
     }
   )
-  
+
+  useCreateMapListeners(map, events, googleMapEvents)
+
   return (
     <_>
       <div ref={mapRef} {...containerProps} />
@@ -34,13 +36,6 @@ function GoogleMap({
             </MapContext.Provider>
             <SetOptions obj={map} opts={options} />
             <SetOption obj={map} func='panTo' args={center} />
-            { Object.keys(events).map(funcName =>
-              <AddMapListener key={funcName}
-                obj={map}
-                func={events[funcName]}
-                event={googleMapEvents[funcName]}
-              />
-            )}
           </_>
         : null }
     </_>
@@ -54,7 +49,15 @@ function useMap() {
   return useContext(MapContext);
 }
 
+function useMapEventListener(event, func) {
+  const map = useMap()
+  if (!map) throw new Error(
+    'useMapEventListener is not used in a child component of GoogleMap'
+  )
+  return useMapListener(map, func, event)
+}
 export {
   useMap,
+  useMapEventListener,
   GoogleMap as default
 }

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap';
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref';
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks';
-import { polygonEvents } from '../../drawing/Polygon/PolygonEvents';
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks';
+import { directionsRendererEvents } from './directionsRendererEvents';
 
 function DirectionsRenderer({
   options,
@@ -23,13 +23,8 @@ function DirectionsRenderer({
     return () => directionsRenderer.setMap(null)
   }, [map, directionsRenderer])
 
-  return Object.keys(events).map(funcName =>
-    <AddMapListener key={funcName}
-      obj={directionsRenderer}
-      func={events[funcName]}
-      event={polygonEvents[funcName]}
-    />
-  )
+  useCreateMapListeners(directionsRenderer, events, directionsRendererEvents)
+  return null
 }
 
 export default DirectionsRenderer

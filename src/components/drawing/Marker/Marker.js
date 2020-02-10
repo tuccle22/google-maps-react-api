@@ -1,6 +1,6 @@
 import React, { useEffect, createContext, useContext } from 'react'
 import { useMap } from '../../maps/GoogleMap/GoogleMap'
-import { useSetOptions, AddMapListener } from '../../../helpers/hooks/map_hooks'
+import { useSetOptions, useCreateMapListeners } from '../../../helpers/hooks/map_hooks'
 import { useCallbackRef } from '../../../helpers/hooks/use_callback_ref'
 import { useClusterer } from '../../addons/Clusterer/Clusterer'
 import { markerEvents } from './MarkerEvents'
@@ -50,19 +50,10 @@ function Marker({
       }
     }
   }, [map, marker, clusterer, noRedraw])
-
+  useCreateMapListeners(marker, events, markerEvents)
   return (
     <MarkerContext.Provider value={marker}>
-      <React.Fragment>
-        {children}
-        { Object.keys(events).map(funcName =>
-          <AddMapListener key={funcName}
-            obj={marker} 
-            func={events[funcName]}
-            event={markerEvents[funcName]}
-          />
-        )}
-      </React.Fragment>
+      {children}
     </MarkerContext.Provider>
   )
 }

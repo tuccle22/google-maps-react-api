@@ -8,12 +8,7 @@ function LoadMap({
   ...rest
 }) {
   const isLoaded = useScript(url, !!(window.google && window.google.maps))
-  console.log(isLoaded)
-  return isLoaded ? (
-    <GoogleMap {...rest} />
-  ) : (
-    loadingElement
-  )
+  return isLoaded ? <GoogleMap {...rest} /> : loadingElement
 }
 
 export default LoadMap
