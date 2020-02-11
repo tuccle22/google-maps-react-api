@@ -36,6 +36,7 @@ function GoogleMap({
             </MapContext.Provider>
             <SetOptions obj={map} opts={options} />
             <SetOption obj={map} func='panTo' args={center} />
+            {bounds ? <SetOption obj={map} func='panToBounds' args={bounds} />: null}
           </_>
         : null }
     </_>

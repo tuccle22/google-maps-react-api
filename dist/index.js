@@ -215,7 +215,8 @@ function GoogleMap(_ref) {
         children
       ),
       React__default.createElement(SetOptions, { obj: map, opts: options }),
-      React__default.createElement(SetOption, { obj: map, func: 'panTo', args: center })
+      React__default.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
+      bounds ? React__default.createElement(SetOption, { obj: map, func: 'panToBounds', args: bounds }) : null
     ) : null
   );
 }
