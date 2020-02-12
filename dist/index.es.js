@@ -209,7 +209,7 @@ function GoogleMap(_ref) {
       ),
       React.createElement(SetOptions, { obj: map, opts: options }),
       React.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
-      bounds ? React.createElement(SetOption, { obj: map, func: 'panToBounds', args: bounds }) : null
+      bounds ? React.createElement(SetOption, { obj: map, func: 'fitBounds', args: bounds }) : null
     ) : null
   );
 }
