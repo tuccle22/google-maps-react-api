@@ -30,7 +30,7 @@ function useMapListener(mapObj, func, event) {
 function useMapListenerOnce(mapObj, func, event) {
   useEffect(() => {
     const enhancedFunc = (...e) => func(...e, mapObj)
-    mapObj.addListenerOnce(event, enhancedFunc)
+    window.google.event.addListenerOnce(event, enhancedFunc)
     // according to documentation this listener removes itself,
     // but I wonder how it works if the listener never triggers
   }, [mapObj, func, event])

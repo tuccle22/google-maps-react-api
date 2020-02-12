@@ -60,7 +60,7 @@ function useMapListenerOnce(mapObj, func, event) {
 
       return func.apply(undefined, e.concat([mapObj]));
     };
-    mapObj.addListenerOnce(event, enhancedFunc);
+    window.google.event.addListenerOnce(event, enhancedFunc);
     // according to documentation this listener removes itself,
     // but I wonder how it works if the listener never triggers
   }, [mapObj, func, event]);
