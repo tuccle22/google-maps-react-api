@@ -12,7 +12,6 @@ function SetOptions({obj, opts}) {
 }
 
 function SetOption({obj, func, args}) {
-  console.log(obj, func, args)
   useEffect(() => {
     obj[func](args)
   }, [obj, func, args])
@@ -25,6 +24,15 @@ function useMapListener(mapObj, func, event) {
     const enhancedFunc = (...e) => func(...e, mapObj)
     const listener = mapObj.addListener(event, enhancedFunc)
     return () => window.google.maps.event.removeListener(listener)
+  }, [mapObj, func, event])
+}
+
+function useMapListenerOnce(mapObj, func, event) {
+  useEffect(() => {
+    const enhancedFunc = (...e) => func(...e, mapObj)
+    mapObj.addListenerOnce(event, enhancedFunc)
+    // according to documentation this listener removes itself,
+    // but I wonder how it works if the listener never triggers
   }, [mapObj, func, event])
 }
 
@@ -41,25 +49,14 @@ function useCreateMapListeners(mapObj, events, eventMapping) {
     return MapListener()
   })
 }
-function useCreateMapListenersOnce(mapObj, eventsOnce, eventMapping) {
-  return Object.keys(eventsOnce).forEach(funcName => {
-    function MapListenerOnce() {
-      useEffect(() => {
-        const enhancedFunc = (...e) => eventsOnce[funcName](...e, mapObj)
-        mapObj.addListenerOnce(eventMapping[funcName], enhancedFunc)
-        // according to documentation this listener removes itself,
-        // but I wonder how it works if the listener never triggers
-      }, [])
-    }
-    return MapListenerOnce()
-  })
-}
+
 
 export {
   useSetOptions,
   SetOptions,
   SetOption,
   useMapListener,
+  useMapListenerOnce,
   AddMapListener,
   useCreateMapListeners,
 }

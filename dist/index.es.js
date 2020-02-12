@@ -21,7 +21,6 @@ function SetOption(_ref2) {
       func = _ref2.func,
       args = _ref2.args;
 
-  console.log(obj, func, args);
   useEffect(function () {
     obj[func](args);
   }, [obj, func, args]);
@@ -222,9 +221,14 @@ function useMap() {
   return useContext(MapContext);
 }
 
-function useMapEventListener(event, func) {
+function useAMapListener() {
   var map = useMap();
   if (!map) throw new Error('useMapEventListener is not used in a child component of GoogleMap');
+  return map;
+}
+
+function useMapEventListener(event, func) {
+  var map = useAMapListener();
   return useMapListener(map, func, event);
 }
 
