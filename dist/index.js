@@ -28,6 +28,7 @@ function SetOption(_ref2) {
       func = _ref2.func,
       args = _ref2.args;
 
+  console.log(obj, func, args);
   React.useEffect(function () {
     obj[func](args);
   }, [obj, func, args]);

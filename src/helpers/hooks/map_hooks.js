@@ -12,6 +12,7 @@ function SetOptions({obj, opts}) {
 }
 
 function SetOption({obj, func, args}) {
+  console.log(obj, func, args)
   useEffect(() => {
     obj[func](args)
   }, [obj, func, args])
