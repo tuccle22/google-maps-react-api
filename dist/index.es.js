@@ -44,6 +44,21 @@ function useMapListener(mapObj, func, event) {
   }, [mapObj, func, event]);
 }
 
+function useMapListenerOnce(mapObj, func, event) {
+  useEffect(function () {
+    var enhancedFunc = function enhancedFunc() {
+      for (var _len2 = arguments.length, e = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        e[_key2] = arguments[_key2];
+      }
+
+      return func.apply(undefined, e.concat([mapObj]));
+    };
+    mapObj.addListenerOnce(event, enhancedFunc);
+    // according to documentation this listener removes itself,
+    // but I wonder how it works if the listener never triggers
+  }, [mapObj, func, event]);
+}
+
 function AddMapListener(_ref3) {
   var obj = _ref3.obj,
       func = _ref3.func,
@@ -230,6 +245,10 @@ function useAMapListener() {
 function useMapEventListener(event, func) {
   var map = useAMapListener();
   return useMapListener(map, func, event);
+}
+function useMapEventListenerOnce(event, func) {
+  var map = useAMapListener();
+  return useMapListenerOnce(map, func, event);
 }
 
 /**
@@ -1131,5 +1150,5 @@ function getPolygonCenter(polygon) {
   return getLatLng(bounds.getCenter());
 }
 
-export { BicyclingLayer, LoadMap as GoogleMap, TrafficLayer, TransitLayer, Circle, DrawingManager, InfoWindow, Marker, OverlayView, Polygon, Polyline, Rectangle, DirectionsRenderer, useDirectionsRequest, LoadAutoComplete as AutoComplete, LoadSearchBox as SearchBox, StreetViewPanorama, Clusterer, useMapEventListener, getLatLng, getPolygonCenter };
+export { BicyclingLayer, LoadMap as GoogleMap, TrafficLayer, TransitLayer, Circle, DrawingManager, InfoWindow, Marker, OverlayView, Polygon, Polyline, Rectangle, DirectionsRenderer, useDirectionsRequest, LoadAutoComplete as AutoComplete, LoadSearchBox as SearchBox, StreetViewPanorama, Clusterer, useMapEventListener, useMapEventListenerOnce, getLatLng, getPolygonCenter };
 //# sourceMappingURL=index.es.js.map
