@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useRef } from 'react'
 
 /**
  * Creates a class instance that needs
@@ -11,11 +12,14 @@ import { useCallback, useState } from 'react'
  * @returns {Array} [refCallback, classInstance]
  */
 function useNodeRefConstructor(clazz, arg) {
+  // this mimics a constructor so we don't want to
+  // have these arguments recreate the callback
+  const initClazz = useRef(clazz)
+  const initArgs = useRef(arg)
+
   const [inst, setInst] = useState(null)
   const ref = useCallback(node => {
-    if (node) setInst(new clazz(node, arg))
-  // this is a constructor
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (node) setInst(new initClazz.current(node, initArgs.current))
   }, [])
   return [ref, inst]
 }

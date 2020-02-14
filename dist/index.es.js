@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, Fragment, createContext, useContext, useRef, Children, useMemo, memo } from 'react';
+import React, { useEffect, useCallback, useState, useRef, Fragment, createContext, useContext, Children, useMemo, memo } from 'react';
 import MarkerClusterer from '@google/markerclustererplus';
 import { createPortal } from 'react-dom';
 
@@ -173,15 +173,18 @@ var slicedToArray = function () {
  * @returns {Array} [refCallback, classInstance]
  */
 function useNodeRefConstructor(clazz, arg) {
+  // this mimics a constructor so we don't want to
+  // have these arguments recreate the callback
+  var initClazz = useRef(clazz);
+  var initArgs = useRef(arg);
+
   var _useState = useState(null),
       _useState2 = slicedToArray(_useState, 2),
       inst = _useState2[0],
       setInst = _useState2[1];
 
   var ref = useCallback(function (node) {
-    if (node) setInst(new clazz(node, arg));
-    // this is a constructor
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (node) setInst(new initClazz.current(node, initArgs.current));
   }, []);
   return [ref, inst];
 }
@@ -198,17 +201,10 @@ function GoogleMap(_ref) {
       containerProps = _ref.containerProps,
       events = objectWithoutProperties(_ref, ['bounds', 'center', 'children', 'options', 'containerProps']);
 
-  var initialZoom = useRef(options.zoom);
-  var initialCenter = useRef(options.center);
-
-  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.Map, { zoom: initialZoom.current,
-    center: initialCenter.current
-  }),
+  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.Map, { zoom: options.zoom }),
       _useNodeRefConstructo2 = slicedToArray(_useNodeRefConstructo, 2),
       mapRef = _useNodeRefConstructo2[0],
       map = _useNodeRefConstructo2[1];
-
-  useCreateMapListeners(map, events, googleMapEvents);
 
   return React.createElement(
     Fragment,
@@ -224,9 +220,19 @@ function GoogleMap(_ref) {
       ),
       React.createElement(SetOptions, { obj: map, opts: options }),
       React.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
-      bounds ? React.createElement(SetOption, { obj: map, func: 'fitBounds', args: bounds }) : null
+      bounds ? React.createElement(SetOption, { obj: map, func: 'fitBounds', args: bounds }) : null,
+      React.createElement(OnMap, { map: map, events: events, googleMapEvents: googleMapEvents })
     ) : null
   );
+}
+
+function OnMap(_ref2) {
+  var map = _ref2.map,
+      events = _ref2.events,
+      googleMapEvents$$1 = _ref2.googleMapEvents;
+
+  useCreateMapListeners(map, events, googleMapEvents$$1);
+  return null;
 }
 /**
  * Google Map Context for sharing the map instance

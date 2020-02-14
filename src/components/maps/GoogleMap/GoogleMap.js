@@ -14,17 +14,11 @@ function GoogleMap({
   containerProps,
   ...events
 }) {
-  const initialZoom = useRef(options.zoom)
-  const initialCenter = useRef(options.center)
 
   const [mapRef, map] = useNodeRefConstructor(
-    window.google.maps.Map,
-    { zoom: initialZoom.current,
-      center: initialCenter.current
-    }
+    window.google.maps.Map, 
+    { zoom: options.zoom }
   )
-
-  useCreateMapListeners(map, events, googleMapEvents)
 
   return (
     <_>
@@ -37,10 +31,16 @@ function GoogleMap({
             <SetOptions obj={map} opts={options} />
             <SetOption obj={map} func='panTo' args={center} />
             {bounds ? <SetOption obj={map} func='fitBounds' args={bounds} /> : null}
+            <OnMap map={map} events={events} googleMapEvents={googleMapEvents} />
           </_>
         : null }
     </_>
   )
+}
+
+function OnMap({map, events, googleMapEvents}) {
+  useCreateMapListeners(map, events, googleMapEvents)
+  return null
 }
 /**
  * Google Map Context for sharing the map instance
