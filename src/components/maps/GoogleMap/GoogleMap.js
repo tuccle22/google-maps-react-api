@@ -1,7 +1,9 @@
 import React, { Fragment as _, createContext, useContext, useRef } from 'react'
-import { SetOptions, SetOption, useCreateMapListeners, useMapListener, useMapListenerOnce } from '../../../helpers/hooks/map_hooks'
+import { SetOptions, SetOption, useCreateMapListeners, useMapListener, useMapListenerOnce, useSetOptions } from '../../../helpers/hooks/map_hooks'
 import { googleMapEvents } from './GoogleMapEvents';
 import { useNodeRefConstructor } from '../../../helpers/hooks/use_node_ref_constructor';
+import { useEffect } from 'react';
+import { memo } from 'react';
 /**
  * GoogleMap
  * https://developers.google.com/maps/documentation/javascript/reference/map
@@ -24,24 +26,34 @@ function GoogleMap({
     <_>
       <div ref={mapRef} {...containerProps} />
         { map ?
-          <_>
-            <MapContext.Provider value={map}>
+          <MapContext.Provider value={map}>
+            <OnMap center={center} options={options} events={events}>
               { children }
-            </MapContext.Provider>
-            <SetOptions obj={map} opts={options} />
-            <SetOption obj={map} func='panTo' args={center} />
-            {bounds ? <SetOption obj={map} func='fitBounds' args={bounds} /> : null}
-            <OnMap map={map} events={events} googleMapEvents={googleMapEvents} />
-          </_>
+            </OnMap>
+          </MapContext.Provider>
         : null }
     </_>
   )
 }
 
-function OnMap({map, events, googleMapEvents}) {
+const OnMap = memo(({children, center, opts, events, bounds}) => {
+  const map = useMap()
+  // set map event listeners
   useCreateMapListeners(map, events, googleMapEvents)
-  return null
-}
+  // set options on map
+  useSetOptions(map, opts)
+  // set center of map
+  useEffect(() => {
+    map.panTo(center)
+  }, [map, center])
+  // set bounds of map
+  useEffect(() => {
+    if (bounds) {
+      map.fitBounds(bounds)
+    }
+  }, [map, bounds])
+  return children
+})
 /**
  * Google Map Context for sharing the map instance
  */

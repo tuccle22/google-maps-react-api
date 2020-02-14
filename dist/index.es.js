@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useRef, Fragment, createContext, useContext, Children, useMemo, memo } from 'react';
+import React, { useEffect, useCallback, useState, useRef, Fragment, createContext, useContext, memo, Children, useMemo } from 'react';
 import MarkerClusterer from '@google/markerclustererplus';
 import { createPortal } from 'react-dom';
 
@@ -13,17 +13,6 @@ function SetOptions(_ref) {
       opts = _ref.opts;
 
   useSetOptions(obj, opts);
-  return null;
-}
-
-function SetOption(_ref2) {
-  var obj = _ref2.obj,
-      func = _ref2.func,
-      args = _ref2.args;
-
-  useEffect(function () {
-    obj[func](args);
-  }, [obj, func, args]);
   return null;
 }
 
@@ -211,29 +200,41 @@ function GoogleMap(_ref) {
     null,
     React.createElement('div', _extends({ ref: mapRef }, containerProps)),
     map ? React.createElement(
-      Fragment,
-      null,
+      MapContext.Provider,
+      { value: map },
       React.createElement(
-        MapContext.Provider,
-        { value: map },
+        OnMap,
+        { center: center, options: options, events: events },
         children
-      ),
-      React.createElement(SetOptions, { obj: map, opts: options }),
-      React.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
-      bounds ? React.createElement(SetOption, { obj: map, func: 'fitBounds', args: bounds }) : null,
-      React.createElement(OnMap, { map: map, events: events, googleMapEvents: googleMapEvents })
+      )
     ) : null
   );
 }
 
-function OnMap(_ref2) {
-  var map = _ref2.map,
+var OnMap = memo(function (_ref2) {
+  var children = _ref2.children,
+      center = _ref2.center,
+      opts = _ref2.opts,
       events = _ref2.events,
-      googleMapEvents$$1 = _ref2.googleMapEvents;
+      bounds = _ref2.bounds;
 
-  useCreateMapListeners(map, events, googleMapEvents$$1);
-  return null;
-}
+  var map = useMap();
+  // set map event listeners
+  useCreateMapListeners(map, events, googleMapEvents);
+  // set options on map
+  useSetOptions(map, opts);
+  // set center of map
+  useEffect(function () {
+    map.panTo(center);
+  }, [map, center]);
+  // set bounds of map
+  useEffect(function () {
+    if (bounds) {
+      map.fitBounds(bounds);
+    }
+  }, [map, bounds]);
+  return children;
+});
 /**
  * Google Map Context for sharing the map instance
  */

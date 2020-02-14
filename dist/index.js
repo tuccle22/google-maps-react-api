@@ -23,17 +23,6 @@ function SetOptions(_ref) {
   return null;
 }
 
-function SetOption(_ref2) {
-  var obj = _ref2.obj,
-      func = _ref2.func,
-      args = _ref2.args;
-
-  React.useEffect(function () {
-    obj[func](args);
-  }, [obj, func, args]);
-  return null;
-}
-
 function useMapListener(mapObj, func, event) {
   React.useEffect(function () {
     // function that passes back all event and the mapObj itself
@@ -218,29 +207,41 @@ function GoogleMap(_ref) {
     null,
     React__default.createElement('div', _extends({ ref: mapRef }, containerProps)),
     map ? React__default.createElement(
-      React.Fragment,
-      null,
+      MapContext.Provider,
+      { value: map },
       React__default.createElement(
-        MapContext.Provider,
-        { value: map },
+        OnMap,
+        { center: center, options: options, events: events },
         children
-      ),
-      React__default.createElement(SetOptions, { obj: map, opts: options }),
-      React__default.createElement(SetOption, { obj: map, func: 'panTo', args: center }),
-      bounds ? React__default.createElement(SetOption, { obj: map, func: 'fitBounds', args: bounds }) : null,
-      React__default.createElement(OnMap, { map: map, events: events, googleMapEvents: googleMapEvents })
+      )
     ) : null
   );
 }
 
-function OnMap(_ref2) {
-  var map = _ref2.map,
+var OnMap = React.memo(function (_ref2) {
+  var children = _ref2.children,
+      center = _ref2.center,
+      opts = _ref2.opts,
       events = _ref2.events,
-      googleMapEvents$$1 = _ref2.googleMapEvents;
+      bounds = _ref2.bounds;
 
-  useCreateMapListeners(map, events, googleMapEvents$$1);
-  return null;
-}
+  var map = useMap();
+  // set map event listeners
+  useCreateMapListeners(map, events, googleMapEvents);
+  // set options on map
+  useSetOptions(map, opts);
+  // set center of map
+  React.useEffect(function () {
+    map.panTo(center);
+  }, [map, center]);
+  // set bounds of map
+  React.useEffect(function () {
+    if (bounds) {
+      map.fitBounds(bounds);
+    }
+  }, [map, bounds]);
+  return children;
+});
 /**
  * Google Map Context for sharing the map instance
  */
