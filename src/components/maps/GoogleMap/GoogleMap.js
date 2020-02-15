@@ -19,7 +19,7 @@ function GoogleMap({
 
   const [mapRef, map] = useNodeRefConstructor(
     window.google.maps.Map, 
-    { zoom: options.zoom }
+    { zoom: options.zoom, center }
   )
 
   return (
@@ -36,12 +36,12 @@ function GoogleMap({
   )
 }
 
-const OnMap = memo(({children, center, opts, events, bounds}) => {
+const OnMap = memo(({ children, center, options, events, bounds }) => {
   const map = useMap()
   // set map event listeners
   useCreateMapListeners(map, events, googleMapEvents)
   // set options on map
-  useSetOptions(map, opts)
+  useSetOptions(map, options)
   // set center of map
   useEffect(() => {
     map.panTo(center)
@@ -52,8 +52,10 @@ const OnMap = memo(({children, center, opts, events, bounds}) => {
       map.fitBounds(bounds)
     }
   }, [map, bounds])
+
   return children
 })
+
 /**
  * Google Map Context for sharing the map instance
  */
