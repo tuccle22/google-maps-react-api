@@ -197,7 +197,7 @@ function GoogleMap(_ref) {
       containerProps = _ref.containerProps,
       events = objectWithoutProperties(_ref, ['bounds', 'center', 'children', 'options', 'containerProps']);
 
-  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.Map, { zoom: options.zoom }),
+  var _useNodeRefConstructo = useNodeRefConstructor(window.google.maps.Map, { zoom: options.zoom, center: center }),
       _useNodeRefConstructo2 = slicedToArray(_useNodeRefConstructo, 2),
       mapRef = _useNodeRefConstructo2[0],
       map = _useNodeRefConstructo2[1];
@@ -221,7 +221,7 @@ function GoogleMap(_ref) {
 var OnMap = React.memo(function (_ref2) {
   var children = _ref2.children,
       center = _ref2.center,
-      opts = _ref2.opts,
+      options = _ref2.options,
       events = _ref2.events,
       bounds = _ref2.bounds;
 
@@ -229,7 +229,7 @@ var OnMap = React.memo(function (_ref2) {
   // set map event listeners
   useCreateMapListeners(map, events, googleMapEvents);
   // set options on map
-  useSetOptions(map, opts);
+  useSetOptions(map, options);
   // set center of map
   React.useEffect(function () {
     map.panTo(center);
@@ -240,8 +240,10 @@ var OnMap = React.memo(function (_ref2) {
       map.fitBounds(bounds);
     }
   }, [map, bounds]);
+
   return children;
 });
+
 /**
  * Google Map Context for sharing the map instance
  */
